@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos</title>
-    <meta name="app-version" content="1.0.0-dairy-farm">
+    <meta name="app-version" content="1.1.0-dairy-farm-isolated">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -109,7 +109,7 @@
         <div class="card">
             <h3>Selamat Datang di Sistem Manajemen Kandang Closed House Freestall</h3>
             <p style="line-height: 1.6; color: #555;">
-                Gunakan navigasi di atas untuk memantau inventaris populasi sapi perah FH, mencatat hasil pemerahan susu harian, memantau proses fermentasi kotoran menjadi pupuk kompos organik, serta mengontrol pemasukan dan pengeluaran operasional peternakan.
+                Basis data aplikasi ini terisolasi khusus untuk peternakan sapi. Gunakan navigasi di atas untuk memantau inventaris populasi sapi perah FH, mencatat hasil pemerahan susu harian, memantau proses fermentasi kotoran menjadi pupuk kompos organik, serta mengontrol pemasukan dan pengeluaran operasional peternakan.
             </p>
         </div>
     </div>
@@ -271,7 +271,7 @@
                         <tr><th>Jenis</th><th>Keterangan</th><th>Nominal</th><th>Aksi</th></tr>
                     </thead>
                     <tbody id="finTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #777;">Memuat data...</td></tr>
+                        <tr><td colspan="4" style="text-align: center; color: #777;">Belum ada transaksi keuangan.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -292,13 +292,13 @@
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyCVJcVrRg4w9xY__bvf_4Lfk0ENQ5X5F8E",
-        authDomain: "pencatatan-keuangan-brankas.firebaseapp.com",
-        databaseURL: "https://pencatatan-keuangan-brankas-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "pencatatan-keuangan-brankas",
-        storageBucket: "pencatatan-keuangan-brankas.firebasestorage.app",
+        authDomain: "pencatatan-sapi-perah.firebaseapp.com",
+        databaseURL: "https://pencatatan-sapi-perah-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "pencatatan-sapi-perah",
+        storageBucket: "pencatatan-sapi-perah.firebasestorage.app",
         messagingSenderId: "720417739854",
-        appId: "1:720417739854:web:2068a770e38890783d1f1f",
-        measurementId: "G-X3Z7GVB39Z"
+        appId: "1:720417739854:web:isolatedfarm01",
+        measurementId: "G-FARM01"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -374,7 +374,6 @@
             tbody.innerHTML += `<tr><td><b>${i.tag}</b></td><td>${i.status}</td><td>${i.age} Bulan</td><td><button class="btn-danger" onclick="deleteCow(${i.id})">Hapus</button></td></tr>`;
         });
         
-        // Update Dashboard Stats
         document.getElementById('statTotalCows').innerText = cows.length + ' Ekor';
         let lactatingCount = cows.filter(i => i.status === 'Laktasi').length;
         document.getElementById('statLactating').innerText = lactatingCount + ' Ekor';
