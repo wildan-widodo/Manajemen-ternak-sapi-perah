@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro</title>
-    <meta name="app-version" content="1.2.0-dairy-farm-complete">
+    <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
+    <meta name="app-version" content="1.3.0-dairy-farm-barcode">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -19,7 +20,7 @@
         h2, h3 { margin-top: 0; color: #2e7d32; }
         
         .main-nav { display: flex; gap: 8px; margin-bottom: 20px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); flex-wrap: wrap; }
-        .main-nav-btn { flex: 1; background: #e0e0e0; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #555; font-size: 0.88rem; text-align: center; min-width: 130px; transition: all 0.2s ease; }
+        .main-nav-btn { flex: 1; background: #e0e0e0; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; color: #555; font-size: 0.85rem; text-align: center; min-width: 120px; transition: all 0.2s ease; }
         .main-nav-btn.active { background: #2e7d32; color: white; }
 
         .slide-section { display: none; }
@@ -35,6 +36,7 @@
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; }
         
         .btn-primary { background: #2e7d32; color: white; border: none; padding: 12px 15px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1rem; }
+        .btn-scanner { background: #1976d2; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 5px; display: inline-flex; align-items: center; gap: 5px; font-weight: bold; }
         .btn-danger { background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-link-share { background: #607d8b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; }
         
@@ -45,6 +47,9 @@
         
         .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 8px; width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center; }
+        
+        /* Scanner Container */
+        #scannerModalContent { width: 90%; max-width: 450px; background: white; padding: 20px; border-radius: 8px; text-align: center; }
         
         .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; }
         .badge-success { background: #2e7d32; }
@@ -75,7 +80,7 @@
 <!-- APLIKASI UTAMA -->
 <div class="container" id="appContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-        <h2 style="margin: 0; color: #2e7d32;">🐄 Smart Farm Sapi Perah FH, Pakan & Kompos</h2>
+        <h2 style="margin: 0; color: #2e7d32;">🐄 Smart Farm Sapi Perah FH & Barcode Scanner</h2>
         <div style="display: flex; gap: 8px;">
             <button class="btn-link-share" onclick="openLinkModal()">🔗 Tautan & QR</button>
             <button class="btn-danger" onclick="handleLogout()" style="width: auto; padding: 6px 12px;">🚪 Keluar</button>
@@ -87,7 +92,7 @@
         <button class="main-nav-btn active" onclick="switchSlide(1)">📊 Dashboard</button>
         <button class="main-nav-btn" onclick="switchSlide(2)">🐄 Data Ternak</button>
         <button class="main-nav-btn" onclick="switchSlide(3)">💉 Kesehatan & IB</button>
-        <button class="main-nav-btn" onclick="switchSlide(4)">🥛 Produksi & Kualitas Susu</button>
+        <button class="main-nav-btn" onclick="switchSlide(4)">🥛 Produksi Susu</button>
         <button class="main-nav-btn" onclick="switchSlide(5)">🌾 Pakan & Nutrisi</button>
         <button class="main-nav-btn" onclick="switchSlide(6)">🌱 Kompos & Limbah</button>
         <button class="main-nav-btn" onclick="switchSlide(7)">💰 Laba/Rugi Farm</button>
@@ -122,9 +127,9 @@
             </div>
         </div>
         <div class="card">
-            <h3>Sistem Manajemen Peternakan Sapi Perah Terpadu</h3>
+            <h3>Sistem Manajemen Peternakan Terintegrasi Barcode Scanner</h3>
             <p style="line-height: 1.6; color: #555;">
-                Aplikasi terisolasi khusus pengolahan data ternak, pemantauan masa laktasi, program Inseminasi Buatan (IB), kualitas pemerahan susu, persediaan stok pakan, proses pematangan kompos, hingga analisis laporan keuangan laba/rugi peternakan secara real-time.
+                Gunakan fitur pemindai kamera untuk membaca Barcode EarTag di telinga sapi secara instan saat melakukan input data ternak, pemeriksaan kesehatan, pencatatan Inseminasi Buatan (IB), maupun monitoring harian.
             </p>
         </div>
     </div>
@@ -138,6 +143,7 @@
                     <div class="form-group">
                         <label>Nomor / Nama EarTag Sapi</label>
                         <input type="text" id="cowTag" placeholder="Contoh: FH-001" required>
+                        <button type="button" class="btn-scanner" onclick="openScanner('cowTag')">📷 Scan Barcode EarTag</button>
                     </div>
                     <div class="form-group">
                         <label>Status Sapi</label>
@@ -181,6 +187,7 @@
                     <div class="form-group">
                         <label>EarTag Sapi Indukan</label>
                         <input type="text" id="breedTag" placeholder="Contoh: FH-001" required>
+                        <button type="button" class="btn-scanner" onclick="openScanner('breedTag')">📷 Scan Barcode EarTag</button>
                     </div>
                     <div class="form-group">
                         <label>Kode Pejantan / Straw</label>
@@ -195,7 +202,7 @@
             </form>
         </div>
         <div class="card">
-            <h3>Riwayat IB, Estimasi Melahirkan (HPL) & Kering Kandang</h3>
+            <h3>Riwayat IB, Estimasi Melahirkan (HPL)</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -214,10 +221,11 @@
                     <div class="form-group">
                         <label>EarTag Sapi</label>
                         <input type="text" id="healthTag" placeholder="Contoh: FH-002" required>
+                        <button type="button" class="btn-scanner" onclick="openScanner('healthTag')">📷 Scan Barcode EarTag</button>
                     </div>
                     <div class="form-group">
                         <label>Keluhan / Diagnosa / Treatment</label>
-                        <input type="text" id="healthDesc" placeholder="Contoh: Pemberian Vitamin & Cek Rutin Mastitis" required>
+                        <input type="text" id="healthDesc" placeholder="Contoh: Vitamin & Cek Mastitis" required>
                     </div>
                     <div class="form-group">
                         <label>Tanggal Penanganan</label>
@@ -239,10 +247,10 @@
         </div>
     </div>
 
-    <!-- SLIDE 4: PRODUKSI & KUALITAS SUSU -->
+    <!-- SLIDE 4: PRODUKSI SUSU -->
     <div class="slide-section" id="slide4">
         <div class="card">
-            <h3>Pencatatan Pemerahan & Kualitas Susu Harian</h3>
+            <h3>Pencatatan Pemerahan Susu Harian</h3>
             <form onsubmit="saveMilk(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
                     <div class="form-group">
@@ -295,7 +303,7 @@
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
                         <label>Jenis Pakan / Material</label>
-                        <input type="text" id="feedName" placeholder="Contoh: Konsentrat Laktasi / Silase Jagung" required>
+                        <input type="text" id="feedName" placeholder="Contoh: Konsentrat Laktasi" required>
                     </div>
                     <div class="form-group">
                         <label>Sisa Stok saat ini (Kg / Sak)</label>
@@ -324,7 +332,7 @@
         </div>
     </div>
 
-    <!-- SLIDE 6: PRODUKSI & PENJUALAN KOMPOS -->
+    <!-- SLIDE 6: KOMPOS -->
     <div class="slide-section" id="slide6">
         <div class="card">
             <h3>Manajemen Pengolahan Kompos Limbah Kandang</h3>
@@ -352,7 +360,7 @@
             </form>
         </div>
         <div class="card">
-            <h3>Monitoring Pengolahan & Stok Pupuk Kompos</h3>
+            <h3>Monitoring Pengolahan Pupuk Kompos</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
@@ -375,13 +383,13 @@
                     <div class="form-group">
                         <label>Jenis Transaksi</label>
                         <select id="finType">
-                            <option value="Pemasukan">Pemasukan (Jual Susu / Kompos / Pedet)</option>
+                            <option value="Pemasukan">Pemasukan (Jual Susu / Kompos)</option>
                             <option value="Pengeluaran">Pengeluaran (Pakan / Obat / Operasional)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Keterangan</label>
-                        <input type="text" id="finDesc" placeholder="Contoh: Penjualan Susu / Beli Konsentrat" required>
+                        <input type="text" id="finDesc" placeholder="Contoh: Penjualan Susu" required>
                     </div>
                     <div class="form-group">
                         <label>Nominal (Rp)</label>
@@ -432,6 +440,15 @@
     </div>
 </div>
 
+<!-- MODAL SCANNER BARCODE -->
+<div class="modal" id="scannerModal">
+    <div id="scannerModalContent">
+        <h3>Arahkan Kamera ke EarTag Barcode</h3>
+        <div id="reader" style="width: 100%;"></div>
+        <button class="btn-danger" onclick="closeScanner()" style="width:100%; margin-top:15px;">Tutup Kamera</button>
+    </div>
+</div>
+
 <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDL2sHnlFbawl1GGTbCydzzmpFWK8xAVcg",
@@ -447,6 +464,8 @@
     const db = firebase.database();
 
     let cows = [], milks = [], composts = [], finances = [], breedings = [], healths = [], feeds = [];
+    let html5QrCode = null;
+    let activeTargetInputId = null;
 
     auth.onAuthStateChanged(user => {
         if (user) {
@@ -489,6 +508,50 @@
 
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
 
+    // --- BARCODE SCANNER LOGIC ---
+    function openScanner(targetInputId) {
+        activeTargetInputId = targetInputId;
+        document.getElementById('scannerModal').style.display = 'flex';
+        
+        if (!html5QrCode) {
+            html5QrCode = new Html5Qrcode("reader");
+        }
+        
+        const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            config, 
+            onScanSuccess,
+            onScanFailure
+        ).catch(err => {
+            alert("Gagal mengaktifkan kamera: " + err);
+            closeScanner();
+        });
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+        if (activeTargetInputId) {
+            document.getElementById(activeTargetInputId).value = decodedText;
+        }
+        closeScanner();
+    }
+
+    function onScanFailure(error) {
+        // Abaikan error frame gagal scan agar kamera tetap berjalan mulus mencari barcode
+    }
+
+    function closeScanner() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().then(() => {
+                document.getElementById('scannerModal').style.display = 'none';
+            }).catch(err => {
+                document.getElementById('scannerModal').style.display = 'none';
+            });
+        } else {
+            document.getElementById('scannerModal').style.display = 'none';
+        }
+    }
+
     // --- TERNAK ---
     function saveCow(e) {
         e.preventDefault();
@@ -530,7 +593,7 @@
         e.preventDefault();
         let bDate = new Date(document.getElementById('breedDate').value);
         let hplDate = new Date(bDate);
-        hplDate.setDate(hplDate.getDate() + 280); // Rata-rata gestasi Sapi FH ~280 hari
+        hplDate.setDate(hplDate.getDate() + 280);
 
         breedings.push({
             id: Date.now(),
@@ -585,7 +648,7 @@
         });
     }
 
-    // --- SUSU & KUALITAS ---
+    // --- SUSU ---
     function saveMilk(e) {
         e.preventDefault();
         milks.push({
@@ -621,7 +684,7 @@
         document.getElementById('statMilkToday').innerText = totalToday + ' Liter';
     }
 
-    // --- PAKAN & NUTRISI ---
+    // --- PAKAN ---
     function saveFeed(e) {
         e.preventDefault();
         feeds.push({
@@ -681,7 +744,7 @@
         document.getElementById('statCompostStock').innerText = composts.length > 0 ? composts[composts.length - 1].qty : '0 Karung';
     }
 
-    // --- KEUANGAN & LABA RUGI ---
+    // --- KEUANGAN ---
     function saveFinance(e) {
         e.preventDefault();
         finances.push({
