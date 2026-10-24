@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="1.6.0-dairy-farm-barcode">
+    <meta name="app-version" content="1.7.0-dairy-farm-barcode">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -258,14 +258,21 @@
         </div>
     </div>
 
-    <!-- SLIDE 4: PRODUKSI SUSU -->
+    <!-- SLIDE 4: PRODUKSI SUSU (DENGAN BARCODE SCANNER INDIVIDUAL PER SAPI) -->
     <div class="slide-section" id="slide4">
         <div class="card">
-            <h3>Pencatatan Pemerahan Susu Harian</h3>
+            <h3>Pencatatan Pemerahan Susu Individual Per Sapi</h3>
             <form onsubmit="saveMilk(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
-                        <label>Tanggal</label>
+                        <label>Pilih / Scan Sapi (EarTag)</label>
+                        <select id="milkTagSelect" required>
+                            <option value="">-- Pilih Sapi Terdaftar --</option>
+                        </select>
+                        <button type="button" class="btn-scanner" onclick="openScannerForSelect('milkTagSelect', true)">📷 Scan Barcode EarTag Sapi</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Pemerahan</label>
                         <input type="date" id="milkDate" required>
                     </div>
                     <div class="form-group">
@@ -276,22 +283,22 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Volume Total (Liter)</label>
-                        <input type="number" step="0.1" id="milkVolume" placeholder="Contoh: 450" required>
+                        <label>Hasil Susu (Liter)</label>
+                        <input type="number" step="0.1" id="milkVolume" placeholder="Contoh: 14.5" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Catatan Produksi Susu</button>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Catatan Susu Sapi</button>
             </form>
         </div>
         <div class="card">
-            <h3>Riwayat Produksi Susu</h3>
+            <h3>Riwayat Produksi Susu Per Ekor Sapi</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr><th>Tanggal</th><th>Sesi</th><th>Volume (Liter)</th><th>Aksi</th></tr>
+                        <tr><th>Tanggal</th><th>EarTag Sapi</th><th>Sesi</th><th>Hasil (Liter)</th><th>Aksi</th></tr>
                     </thead>
                     <tbody id="milkTableBody">
-                        <tr><td colspan="4" style="text-align: center; color: #777;">Memuat data...</td></tr>
+                        <tr><td colspan="5" style="text-align: center; color: #777;">Memuat data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -480,8 +487,8 @@
     let html5QrCode = null;
     let activeTargetInputId = null;
     let activeTargetSelectId = null;
+    let autoFocusVolume = false;
 
-    // --- OTOMATISASI SET TANGGAL HARI INI DI SEMUA INPUT DATE ---
     function setDefaultDates() {
         const todayStr = new Date().toISOString().slice(0, 10);
         const dateInputIds = ['breedDate', 'healthDate', 'milkDate', 'compostDate'];
@@ -535,7 +542,6 @@
 
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
 
-    // --- FORMAT RIBUAN DENGAN TITIK PADA INPUT NOMINAL KEUANGAN ---
     function formatNominalInput(input) {
         let val = input.value.replace(/\D/g, "");
         if (val) {
@@ -545,9 +551,8 @@
         }
     }
 
-    // --- MANAJEMEN DROPDOWN SAPI TERDAFTAR ---
     function updateCowDropdowns() {
-        const selectIds = ['breedTagSelect', 'healthTagSelect'];
+        const selectIds = ['breedTagSelect', 'healthTagSelect', 'milkTagSelect'];
         selectIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -564,6 +569,7 @@
     function openScanner(targetInputId = null) {
         activeTargetInputId = targetInputId;
         activeTargetSelectId = null;
+        autoFocusVolume = false;
         document.getElementById('scannerModal').style.display = 'flex';
         
         if (!html5QrCode) {
@@ -575,9 +581,10 @@
             .catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
     }
 
-    function openScannerForSelect(targetSelectId) {
+    function openScannerForSelect(targetSelectId, focusVolume = false) {
         activeTargetSelectId = targetSelectId;
         activeTargetInputId = null;
+        autoFocusVolume = focusVolume;
         document.getElementById('scannerModal').style.display = 'flex';
         
         if (!html5QrCode) {
@@ -600,6 +607,11 @@
             const found = cows.find(c => c.tag.toLowerCase() === decodedText.toLowerCase());
             if (found) {
                 selectEl.value = found.tag;
+                if (autoFocusVolume) {
+                    setTimeout(() => {
+                        document.getElementById('milkVolume').focus();
+                    }, 300);
+                }
             } else {
                 alert(`Barcode "${decodedText}" belum terdaftar! Silakan daftarkan sapi terlebih dahulu.`);
             }
@@ -622,7 +634,6 @@
         }
     }
 
-    // --- SCAN SAPI POPUP ---
     function handleScannedEarTag(tag) {
         const foundCow = cows.find(c => c.tag.toLowerCase() === tag.toLowerCase());
         const modalBody = document.getElementById('cowInfoModalBody');
@@ -801,18 +812,23 @@
         });
     }
 
-    // --- SUSU ---
+    // --- SUSU (DENGAN EARTAG DARI DROPDOWN / SCANNER) ---
     function saveMilk(e) {
         e.preventDefault();
+        let tag = document.getElementById('milkTagSelect').value;
+        if(!tag) { alert('Silakan pilih atau scan sapi terlebih dahulu!'); return; }
+
         milks.push({
             id: Date.now(),
+            tag: tag,
             date: document.getElementById('milkDate').value,
             session: document.getElementById('milkSession').value,
             volume: parseFloat(document.getElementById('milkVolume').value)
         });
         db.ref('farm_milk').set(milks).then(() => {
-            alert('Catatan susu disimpan!');
+            alert(`Catatan susu untuk sapi ${tag} disimpan!`);
             document.getElementById('milkVolume').value = '';
+            document.getElementById('milkTagSelect').value = '';
             setDefaultDates();
         });
     }
@@ -823,15 +839,16 @@
     function renderMilk() {
         let tbody = document.getElementById('milkTableBody');
         tbody.innerHTML = '';
-        if(milks.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Belum ada catatan susu.</td></tr>`; }
+        if(milks.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada catatan susu.</td></tr>`; }
         let totalToday = 0;
         let todayStr = new Date().toISOString().slice(0, 10);
 
         milks.forEach(i => {
             if(i.date === todayStr) totalToday += i.volume;
-            tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.session}</td><td><b>${i.volume} Liter</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
+            let tagDisplay = i.tag ? `<b>${i.tag}</b>` : '<span style="color:#888;">-</span>';
+            tbody.innerHTML += `<tr><td>${i.date}</td><td>${tagDisplay}</td><td>${i.session}</td><td><b>${i.volume} Liter</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
         });
-        document.getElementById('statMilkToday').innerText = totalToday + ' Liter';
+        document.getElementById('statMilkToday').innerText = totalToday.toFixed(1) + ' Liter';
     }
 
     // --- PAKAN ---
