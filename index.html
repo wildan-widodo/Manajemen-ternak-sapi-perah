@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="1.5.0-dairy-farm-barcode">
+    <meta name="app-version" content="1.6.0-dairy-farm-barcode">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -40,7 +40,6 @@
         .btn-danger { background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-secondary { background: #757575; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-link-share { background: #607d8b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; }
-        .btn-popup-trigger { background: #ed6c02; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; }
 
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; white-space: nowrap; }
@@ -183,14 +182,10 @@
         </div>
     </div>
 
-    <!-- SLIDE 3: KESEHATAN & INSEMINASI BUATAN (IB) (PERBAIKAN FITUR INPUT NAKAL) -->
+    <!-- SLIDE 3: KESEHATAN & INSEMINASI BUATAN (IB) -->
     <div class="slide-section" id="slide3">
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0;">Pencatatan Inseminasi Buatan (IB) & Kehamilan</h3>
-                <button class="btn-popup-trigger" onclick="openBreedingModal()">➕ Input IB via Pop-Up</button>
-            </div>
-            
+            <h3>Pencatatan Inseminasi Buatan (IB) & Kehamilan</h3>
             <form onsubmit="saveBreeding(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
@@ -228,11 +223,7 @@
         </div>
 
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 0;">Catatan Rekap Medis & Kesehatan Sapi</h3>
-                <button class="btn-popup-trigger" style="background:#1976d2;" onclick="openHealthModal()">➕ Input Medis via Pop-Up</button>
-            </div>
-
+            <h3>Catatan Rekap Medis & Kesehatan Sapi</h3>
             <form onsubmit="saveHealth(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
@@ -272,7 +263,7 @@
         <div class="card">
             <h3>Pencatatan Pemerahan Susu Harian</h3>
             <form onsubmit="saveMilk(event)">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
                         <label>Tanggal</label>
                         <input type="date" id="milkDate" required>
@@ -288,27 +279,19 @@
                         <label>Volume Total (Liter)</label>
                         <input type="number" step="0.1" id="milkVolume" placeholder="Contoh: 450" required>
                     </div>
-                    <div class="form-group">
-                        <label>Kadar Lemak (%)</label>
-                        <input type="number" step="0.1" id="milkFat" placeholder="Contoh: 3.8">
-                    </div>
-                    <div class="form-group">
-                        <label>Kadar SNF (%)</label>
-                        <input type="number" step="0.1" id="milkSNF" placeholder="Contoh: 8.2">
-                    </div>
                 </div>
                 <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Catatan Produksi Susu</button>
             </form>
         </div>
         <div class="card">
-            <h3>Riwayat Produksi & Mutu Susu</h3>
+            <h3>Riwayat Produksi Susu</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr><th>Tanggal</th><th>Sesi</th><th>Volume (Liter)</th><th>Lemak (%)</th><th>SNF (%)</th><th>Aksi</th></tr>
+                        <tr><th>Tanggal</th><th>Sesi</th><th>Volume (Liter)</th><th>Aksi</th></tr>
                     </thead>
                     <tbody id="milkTableBody">
-                        <tr><td colspan="6" style="text-align: center; color: #777;">Memuat data...</td></tr>
+                        <tr><td colspan="4" style="text-align: center; color: #777;">Memuat data...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -413,7 +396,7 @@
                     </div>
                     <div class="form-group">
                         <label>Nominal (Rp)</label>
-                        <input type="number" id="finNominal" placeholder="Contoh: 1500000" required>
+                        <input type="text" id="finNominal" placeholder="Contoh: 1.500.000" oninput="formatNominalInput(this)" required>
                     </div>
                 </div>
                 <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Transaksi Keuangan</button>
@@ -447,58 +430,6 @@
                 </table>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- POPUP MODAL INPUT IB CEPAT -->
-<div class="modal" id="popupBreedingModal">
-    <div class="modal-content">
-        <h3 style="color:#ed6c02;">💉 Input Inseminasi Buatan (IB) Cepat</h3>
-        <form onsubmit="saveBreedingFromPopup(event)">
-            <div class="form-group">
-                <label>Sapi Indukan (EarTag)</label>
-                <select id="popBreedTagSelect" required>
-                    <option value="">-- Pilih Sapi Terdaftar --</option>
-                </select>
-                <button type="button" class="btn-scanner" onclick="openScannerForSelect('popBreedTagSelect')">📷 Scan Barcode EarTag</button>
-            </div>
-            <div class="form-group">
-                <label>Kode Straw Pejantan</label>
-                <input type="text" id="popBreedBull" placeholder="Contoh: Bull Bullseye 101" required>
-            </div>
-            <div class="form-group">
-                <label>Tanggal IB</label>
-                <input type="date" id="popBreedDate" required>
-            </div>
-            <button type="submit" class="btn-primary" style="margin-top:10px; background:#ed6c02;">Simpan IB via Pop-Up</button>
-        </form>
-        <button class="btn-secondary" onclick="document.getElementById('popupBreedingModal').style.display='none'" style="width:100%; margin-top:10px;">Batal</button>
-    </div>
-</div>
-
-<!-- POPUP MODAL INPUT MEDIS CEPAT -->
-<div class="modal" id="popupHealthModal">
-    <div class="modal-content">
-        <h3 style="color:#1976d2;">🩺 Input Rekap Medis Cepat</h3>
-        <form onsubmit="saveHealthFromPopup(event)">
-            <div class="form-group">
-                <label>Sapi (EarTag)</label>
-                <select id="popHealthTagSelect" required>
-                    <option value="">-- Pilih Sapi Terdaftar --</option>
-                </select>
-                <button type="button" class="btn-scanner" onclick="openScannerForSelect('popHealthTagSelect')">📷 Scan Barcode EarTag</button>
-            </div>
-            <div class="form-group">
-                <label>Keluhan / Diagnosa / Treatment</label>
-                <input type="text" id="popHealthDesc" placeholder="Contoh: Vitamin & Cek Mastitis" required>
-            </div>
-            <div class="form-group">
-                <label>Tanggal Penanganan</label>
-                <input type="date" id="popHealthDate" required>
-            </div>
-            <button type="submit" class="btn-primary" style="margin-top:10px; background:#1976d2;">Simpan Medis via Pop-Up</button>
-        </form>
-        <button class="btn-secondary" onclick="document.getElementById('popupHealthModal').style.display='none'" style="width:100%; margin-top:10px;">Batal</button>
     </div>
 </div>
 
@@ -550,10 +481,23 @@
     let activeTargetInputId = null;
     let activeTargetSelectId = null;
 
+    // --- OTOMATISASI SET TANGGAL HARI INI DI SEMUA INPUT DATE ---
+    function setDefaultDates() {
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const dateInputIds = ['breedDate', 'healthDate', 'milkDate', 'compostDate'];
+        dateInputIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && !el.value) {
+                el.value = todayStr;
+            }
+        });
+    }
+
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('appContainer').style.display = 'block';
+            setDefaultDates();
             loadAllData();
         } else {
             document.getElementById('loginCard').style.display = 'block';
@@ -591,9 +535,19 @@
 
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
 
+    // --- FORMAT RIBUAN DENGAN TITIK PADA INPUT NOMINAL KEUANGAN ---
+    function formatNominalInput(input) {
+        let val = input.value.replace(/\D/g, "");
+        if (val) {
+            input.value = new Intl.NumberFormat('id-ID').format(parseInt(val, 10));
+        } else {
+            input.value = "";
+        }
+    }
+
     // --- MANAJEMEN DROPDOWN SAPI TERDAFTAR ---
     function updateCowDropdowns() {
-        const selectIds = ['breedTagSelect', 'healthTagSelect', 'popBreedTagSelect', 'popHealthTagSelect'];
+        const selectIds = ['breedTagSelect', 'healthTagSelect'];
         selectIds.forEach(id => {
             const el = document.getElementById(id);
             if (!el) return;
@@ -745,66 +699,6 @@
         document.getElementById('cowInfoModal').style.display = 'none';
     }
 
-    // --- FITUR POP-UP INPUT IB & HEALTH ---
-    function openBreedingModal() {
-        document.getElementById('popupBreedingModal').style.display = 'flex';
-        document.getElementById('popBreedDate').value = new Date().toISOString().slice(0, 10);
-    }
-
-    function saveBreedingFromPopup(e) {
-        e.preventDefault();
-        const tag = document.getElementById('popBreedTagSelect').value;
-        const bull = document.getElementById('popBreedBull').value.trim();
-        const dateStr = document.getElementById('popBreedDate').value;
-
-        if (!tag) { alert('Silakan pilih Sapi terlebih dahulu!'); return; }
-
-        let bDate = new Date(dateStr);
-        let hplDate = new Date(bDate);
-        hplDate.setDate(hplDate.getDate() + 280);
-
-        breedings.push({
-            id: Date.now(),
-            tag: tag,
-            bull: bull,
-            date: dateStr,
-            hpl: hplDate.toISOString().slice(0, 10)
-        });
-
-        db.ref('farm_breeding').set(breedings).then(() => {
-            alert('Data IB via Pop-Up berhasil disimpan!');
-            document.getElementById('popupBreedingModal').style.display = 'none';
-            document.getElementById('popBreedBull').value = '';
-        });
-    }
-
-    function openHealthModal() {
-        document.getElementById('popupHealthModal').style.display = 'flex';
-        document.getElementById('popHealthDate').value = new Date().toISOString().slice(0, 10);
-    }
-
-    function saveHealthFromPopup(e) {
-        e.preventDefault();
-        const tag = document.getElementById('popHealthTagSelect').value;
-        const desc = document.getElementById('popHealthDesc').value.trim();
-        const dateStr = document.getElementById('popHealthDate').value;
-
-        if (!tag) { alert('Silakan pilih Sapi terlebih dahulu!'); return; }
-
-        healths.push({
-            id: Date.now(),
-            tag: tag,
-            desc: desc,
-            date: dateStr
-        });
-
-        db.ref('farm_health').set(healths).then(() => {
-            alert('Data Rekap Medis via Pop-Up berhasil disimpan!');
-            document.getElementById('popupHealthModal').style.display = 'none';
-            document.getElementById('popHealthDesc').value = '';
-        });
-    }
-
     // --- TERNAK ---
     function saveCow(e) {
         e.preventDefault();
@@ -841,7 +735,7 @@
         document.getElementById('statPregnantCows').innerText = pregnantCount + ' Ekor';
     }
 
-    // --- BREEDING & KESEHATAN (FORM LAMA) ---
+    // --- BREEDING & KESEHATAN ---
     function saveBreeding(e) {
         e.preventDefault();
         let tag = document.getElementById('breedTagSelect').value;
@@ -861,6 +755,7 @@
         db.ref('farm_breeding').set(breedings).then(() => {
             alert('Data IB berhasil ditambahkan!');
             document.getElementById('breedBull').value = '';
+            setDefaultDates();
         });
     }
     function deleteBreeding(id) {
@@ -890,6 +785,7 @@
         db.ref('farm_health').set(healths).then(() => {
             alert('Data medis disimpan!');
             document.getElementById('healthDesc').value = '';
+            setDefaultDates();
         });
     }
     function deleteHealth(id) {
@@ -912,15 +808,12 @@
             id: Date.now(),
             date: document.getElementById('milkDate').value,
             session: document.getElementById('milkSession').value,
-            volume: parseFloat(document.getElementById('milkVolume').value),
-            fat: document.getElementById('milkFat').value || '-',
-            snf: document.getElementById('milkSNF').value || '-'
+            volume: parseFloat(document.getElementById('milkVolume').value)
         });
         db.ref('farm_milk').set(milks).then(() => {
             alert('Catatan susu disimpan!');
             document.getElementById('milkVolume').value = '';
-            document.getElementById('milkFat').value = '';
-            document.getElementById('milkSNF').value = '';
+            setDefaultDates();
         });
     }
     function deleteMilk(id) {
@@ -930,13 +823,13 @@
     function renderMilk() {
         let tbody = document.getElementById('milkTableBody');
         tbody.innerHTML = '';
-        if(milks.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Belum ada catatan susu.</td></tr>`; }
+        if(milks.length === 0) { tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Belum ada catatan susu.</td></tr>`; }
         let totalToday = 0;
         let todayStr = new Date().toISOString().slice(0, 10);
 
         milks.forEach(i => {
             if(i.date === todayStr) totalToday += i.volume;
-            tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.session}</td><td><b>${i.volume} Liter</b></td><td>${i.fat} %</td><td>${i.snf} %</td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
+            tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.session}</td><td><b>${i.volume} Liter</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
         });
         document.getElementById('statMilkToday').innerText = totalToday + ' Liter';
     }
@@ -985,6 +878,7 @@
         db.ref('farm_compost').set(composts).then(() => {
             alert('Data kompos disimpan!');
             document.getElementById('compostQty').value = '';
+            setDefaultDates();
         });
     }
     function deleteCompost(id) {
@@ -1004,11 +898,14 @@
     // --- KEUANGAN ---
     function saveFinance(e) {
         e.preventDefault();
+        let rawVal = document.getElementById('finNominal').value.replace(/\D/g, "");
+        if (!rawVal) return;
+
         finances.push({
             id: Date.now(),
             type: document.getElementById('finType').value,
             desc: document.getElementById('finDesc').value.trim(),
-            nominal: parseFloat(document.getElementById('finNominal').value)
+            nominal: parseFloat(rawVal)
         });
         db.ref('farm_finance').set(finances).then(() => {
             alert('Keuangan disimpan!');
