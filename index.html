@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="1.4.0-dairy-farm-barcode">
+    <meta name="app-version" content="1.5.0-dairy-farm-barcode">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -40,7 +40,8 @@
         .btn-danger { background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-secondary { background: #757575; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-link-share { background: #607d8b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; }
-        
+        .btn-popup-trigger { background: #ed6c02; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; }
+
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; white-space: nowrap; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.88rem; }
@@ -49,7 +50,6 @@
         .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 8px; width: 450px; max-width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: left; }
         
-        /* Scanner Container */
         #scannerModalContent { width: 90%; max-width: 450px; background: white; padding: 20px; border-radius: 8px; text-align: center; }
         
         .badge { padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: white; display: inline-block; }
@@ -183,16 +183,22 @@
         </div>
     </div>
 
-    <!-- SLIDE 3: KESEHATAN & INSEMINASI BUATAN (IB) -->
+    <!-- SLIDE 3: KESEHATAN & INSEMINASI BUATAN (IB) (PERBAIKAN FITUR INPUT NAKAL) -->
     <div class="slide-section" id="slide3">
         <div class="card">
-            <h3>Pencatatan Inseminasi Buatan (IB) & Kehamilan</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Pencatatan Inseminasi Buatan (IB) & Kehamilan</h3>
+                <button class="btn-popup-trigger" onclick="openBreedingModal()">➕ Input IB via Pop-Up</button>
+            </div>
+            
             <form onsubmit="saveBreeding(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
-                        <label>EarTag Sapi Indukan</label>
-                        <input type="text" id="breedTag" placeholder="Contoh: FH-001" required>
-                        <button type="button" class="btn-scanner" onclick="openScanner('breedTag')">📷 Scan Barcode EarTag</button>
+                        <label>Pilih Sapi Indukan (EarTag)</label>
+                        <select id="breedTagSelect" required>
+                            <option value="">-- Pilih Sapi Terdaftar --</option>
+                        </select>
+                        <button type="button" class="btn-scanner" onclick="openScannerForSelect('breedTagSelect')">📷 Scan Barcode EarTag</button>
                     </div>
                     <div class="form-group">
                         <label>Kode Pejantan / Straw</label>
@@ -206,6 +212,7 @@
                 <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Data IB & Hitung Estimasi HPL</button>
             </form>
         </div>
+
         <div class="card">
             <h3>Riwayat IB, Estimasi Melahirkan (HPL)</h3>
             <div class="table-responsive">
@@ -219,14 +226,21 @@
                 </table>
             </div>
         </div>
+
         <div class="card">
-            <h3>Catatan Rekap Medis & Kesehatan Sapi</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                <h3 style="margin: 0;">Catatan Rekap Medis & Kesehatan Sapi</h3>
+                <button class="btn-popup-trigger" style="background:#1976d2;" onclick="openHealthModal()">➕ Input Medis via Pop-Up</button>
+            </div>
+
             <form onsubmit="saveHealth(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="form-group">
-                        <label>EarTag Sapi</label>
-                        <input type="text" id="healthTag" placeholder="Contoh: FH-002" required>
-                        <button type="button" class="btn-scanner" onclick="openScanner('healthTag')">📷 Scan Barcode EarTag</button>
+                        <label>Pilih Sapi (EarTag)</label>
+                        <select id="healthTagSelect" required>
+                            <option value="">-- Pilih Sapi Terdaftar --</option>
+                        </select>
+                        <button type="button" class="btn-scanner" onclick="openScannerForSelect('healthTagSelect')">📷 Scan Barcode EarTag</button>
                     </div>
                     <div class="form-group">
                         <label>Keluhan / Diagnosa / Treatment</label>
@@ -239,6 +253,7 @@
                 </div>
                 <button type="submit" class="btn-primary">Simpan Rekap Medis</button>
             </form>
+
             <div class="table-responsive" style="margin-top:15px;">
                 <table>
                     <thead>
@@ -435,6 +450,58 @@
     </div>
 </div>
 
+<!-- POPUP MODAL INPUT IB CEPAT -->
+<div class="modal" id="popupBreedingModal">
+    <div class="modal-content">
+        <h3 style="color:#ed6c02;">💉 Input Inseminasi Buatan (IB) Cepat</h3>
+        <form onsubmit="saveBreedingFromPopup(event)">
+            <div class="form-group">
+                <label>Sapi Indukan (EarTag)</label>
+                <select id="popBreedTagSelect" required>
+                    <option value="">-- Pilih Sapi Terdaftar --</option>
+                </select>
+                <button type="button" class="btn-scanner" onclick="openScannerForSelect('popBreedTagSelect')">📷 Scan Barcode EarTag</button>
+            </div>
+            <div class="form-group">
+                <label>Kode Straw Pejantan</label>
+                <input type="text" id="popBreedBull" placeholder="Contoh: Bull Bullseye 101" required>
+            </div>
+            <div class="form-group">
+                <label>Tanggal IB</label>
+                <input type="date" id="popBreedDate" required>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top:10px; background:#ed6c02;">Simpan IB via Pop-Up</button>
+        </form>
+        <button class="btn-secondary" onclick="document.getElementById('popupBreedingModal').style.display='none'" style="width:100%; margin-top:10px;">Batal</button>
+    </div>
+</div>
+
+<!-- POPUP MODAL INPUT MEDIS CEPAT -->
+<div class="modal" id="popupHealthModal">
+    <div class="modal-content">
+        <h3 style="color:#1976d2;">🩺 Input Rekap Medis Cepat</h3>
+        <form onsubmit="saveHealthFromPopup(event)">
+            <div class="form-group">
+                <label>Sapi (EarTag)</label>
+                <select id="popHealthTagSelect" required>
+                    <option value="">-- Pilih Sapi Terdaftar --</option>
+                </select>
+                <button type="button" class="btn-scanner" onclick="openScannerForSelect('popHealthTagSelect')">📷 Scan Barcode EarTag</button>
+            </div>
+            <div class="form-group">
+                <label>Keluhan / Diagnosa / Treatment</label>
+                <input type="text" id="popHealthDesc" placeholder="Contoh: Vitamin & Cek Mastitis" required>
+            </div>
+            <div class="form-group">
+                <label>Tanggal Penanganan</label>
+                <input type="date" id="popHealthDate" required>
+            </div>
+            <button type="submit" class="btn-primary" style="margin-top:10px; background:#1976d2;">Simpan Medis via Pop-Up</button>
+        </form>
+        <button class="btn-secondary" onclick="document.getElementById('popupHealthModal').style.display='none'" style="width:100%; margin-top:10px;">Batal</button>
+    </div>
+</div>
+
 <!-- MODAL POPUP HASIL SCAN / REGISTRASI SAPI -->
 <div class="modal" id="cowInfoModal">
     <div class="modal-content">
@@ -481,6 +548,7 @@
     let cows = [], milks = [], composts = [], finances = [], breedings = [], healths = [], feeds = [];
     let html5QrCode = null;
     let activeTargetInputId = null;
+    let activeTargetSelectId = null;
 
     auth.onAuthStateChanged(user => {
         if (user) {
@@ -503,7 +571,7 @@
     function handleLogout() { auth.signOut(); }
 
     function loadAllData() {
-        db.ref('farm_cows').on('value', snap => { cows = snap.val() || []; renderCows(); });
+        db.ref('farm_cows').on('value', snap => { cows = snap.val() || []; renderCows(); updateCowDropdowns(); });
         db.ref('farm_milk').on('value', snap => { milks = snap.val() || []; renderMilk(); });
         db.ref('farm_compost').on('value', snap => { composts = snap.val() || []; renderCompost(); });
         db.ref('farm_finance').on('value', snap => { finances = snap.val() || []; renderFinance(); });
@@ -523,9 +591,25 @@
 
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
 
+    // --- MANAJEMEN DROPDOWN SAPI TERDAFTAR ---
+    function updateCowDropdowns() {
+        const selectIds = ['breedTagSelect', 'healthTagSelect', 'popBreedTagSelect', 'popHealthTagSelect'];
+        selectIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const currentVal = el.value;
+            el.innerHTML = '<option value="">-- Pilih Sapi Terdaftar --</option>';
+            cows.forEach(c => {
+                el.innerHTML += `<option value="${c.tag}">${c.tag} (${c.status})</option>`;
+            });
+            el.value = currentVal;
+        });
+    }
+
     // --- BARCODE SCANNER LOGIC ---
     function openScanner(targetInputId = null) {
         activeTargetInputId = targetInputId;
+        activeTargetSelectId = null;
         document.getElementById('scannerModal').style.display = 'flex';
         
         if (!html5QrCode) {
@@ -533,38 +617,50 @@
         }
         
         const config = { fps: 10, qrbox: { width: 250, height: 150 } };
-        html5QrCode.start(
-            { facingMode: "environment" }, 
-            config, 
-            onScanSuccess,
-            onScanFailure
-        ).catch(err => {
-            alert("Gagal mengaktifkan kamera: " + err);
-            closeScanner();
-        });
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess, onScanFailure)
+            .catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
     }
 
-    function onScanSuccess(decodedText, decodedResult) {
+    function openScannerForSelect(targetSelectId) {
+        activeTargetSelectId = targetSelectId;
+        activeTargetInputId = null;
+        document.getElementById('scannerModal').style.display = 'flex';
+        
+        if (!html5QrCode) {
+            html5QrCode = new Html5Qrcode("reader");
+        }
+        
+        const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+        html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess, onScanFailure)
+            .catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
+    }
+
+    function onScanSuccess(decodedText) {
         closeScanner();
         
-        // Isi input jika dipanggil dari form spesifik
         if (activeTargetInputId) {
             document.getElementById(activeTargetInputId).value = decodedText;
+            handleScannedEarTag(decodedText);
+        } else if (activeTargetSelectId) {
+            const selectEl = document.getElementById(activeTargetSelectId);
+            const found = cows.find(c => c.tag.toLowerCase() === decodedText.toLowerCase());
+            if (found) {
+                selectEl.value = found.tag;
+            } else {
+                alert(`Barcode "${decodedText}" belum terdaftar! Silakan daftarkan sapi terlebih dahulu.`);
+            }
+        } else {
+            handleScannedEarTag(decodedText);
         }
-
-        // Tampilkan Modal Hasil Scan Detail / Pendaftaran
-        handleScannedEarTag(decodedText);
     }
 
-    function onScanFailure(error) {
-        // Abaikan frame gagal scan agar kamera tetap halus beroperasi
-    }
+    function onScanFailure(error) {}
 
     function closeScanner() {
         if (html5QrCode && html5QrCode.isScanning) {
             html5QrCode.stop().then(() => {
                 document.getElementById('scannerModal').style.display = 'none';
-            }).catch(err => {
+            }).catch(() => {
                 document.getElementById('scannerModal').style.display = 'none';
             });
         } else {
@@ -572,13 +668,12 @@
         }
     }
 
-    // --- FITUR BARU: MANAJEMEN POPUP SCAN SAPI ---
+    // --- SCAN SAPI POPUP ---
     function handleScannedEarTag(tag) {
         const foundCow = cows.find(c => c.tag.toLowerCase() === tag.toLowerCase());
         const modalBody = document.getElementById('cowInfoModalBody');
 
         if (foundCow) {
-            // SAPI SUDAH TERDAFTAR -> TAMPILKAN POPUP DETAIL LENGKAP
             const cowBreeding = breedings.filter(b => b.tag.toLowerCase() === tag.toLowerCase());
             const cowHealth = healths.filter(h => h.tag.toLowerCase() === tag.toLowerCase());
 
@@ -602,7 +697,6 @@
                 ${healthHTML}
             `;
         } else {
-            // SAPI BELUM TERDAFTAR -> TAMPILKAN FORM REGISTRASI CEPAT
             modalBody.innerHTML = `
                 <h3 style="color:#1976d2;">⚠️ EarTag "${tag}" Belum Terdaftar</h3>
                 <p style="font-size:0.85rem; color:#666;">Silakan daftarkan identitas sapi perah ini ke dalam sistem:</p>
@@ -651,6 +745,66 @@
         document.getElementById('cowInfoModal').style.display = 'none';
     }
 
+    // --- FITUR POP-UP INPUT IB & HEALTH ---
+    function openBreedingModal() {
+        document.getElementById('popupBreedingModal').style.display = 'flex';
+        document.getElementById('popBreedDate').value = new Date().toISOString().slice(0, 10);
+    }
+
+    function saveBreedingFromPopup(e) {
+        e.preventDefault();
+        const tag = document.getElementById('popBreedTagSelect').value;
+        const bull = document.getElementById('popBreedBull').value.trim();
+        const dateStr = document.getElementById('popBreedDate').value;
+
+        if (!tag) { alert('Silakan pilih Sapi terlebih dahulu!'); return; }
+
+        let bDate = new Date(dateStr);
+        let hplDate = new Date(bDate);
+        hplDate.setDate(hplDate.getDate() + 280);
+
+        breedings.push({
+            id: Date.now(),
+            tag: tag,
+            bull: bull,
+            date: dateStr,
+            hpl: hplDate.toISOString().slice(0, 10)
+        });
+
+        db.ref('farm_breeding').set(breedings).then(() => {
+            alert('Data IB via Pop-Up berhasil disimpan!');
+            document.getElementById('popupBreedingModal').style.display = 'none';
+            document.getElementById('popBreedBull').value = '';
+        });
+    }
+
+    function openHealthModal() {
+        document.getElementById('popupHealthModal').style.display = 'flex';
+        document.getElementById('popHealthDate').value = new Date().toISOString().slice(0, 10);
+    }
+
+    function saveHealthFromPopup(e) {
+        e.preventDefault();
+        const tag = document.getElementById('popHealthTagSelect').value;
+        const desc = document.getElementById('popHealthDesc').value.trim();
+        const dateStr = document.getElementById('popHealthDate').value;
+
+        if (!tag) { alert('Silakan pilih Sapi terlebih dahulu!'); return; }
+
+        healths.push({
+            id: Date.now(),
+            tag: tag,
+            desc: desc,
+            date: dateStr
+        });
+
+        db.ref('farm_health').set(healths).then(() => {
+            alert('Data Rekap Medis via Pop-Up berhasil disimpan!');
+            document.getElementById('popupHealthModal').style.display = 'none';
+            document.getElementById('popHealthDesc').value = '';
+        });
+    }
+
     // --- TERNAK ---
     function saveCow(e) {
         e.preventDefault();
@@ -687,23 +841,25 @@
         document.getElementById('statPregnantCows').innerText = pregnantCount + ' Ekor';
     }
 
-    // --- BREEDING & KESEHATAN ---
+    // --- BREEDING & KESEHATAN (FORM LAMA) ---
     function saveBreeding(e) {
         e.preventDefault();
+        let tag = document.getElementById('breedTagSelect').value;
+        if(!tag) { alert('Silakan pilih sapi terlebih dahulu!'); return; }
+
         let bDate = new Date(document.getElementById('breedDate').value);
         let hplDate = new Date(bDate);
         hplDate.setDate(hplDate.getDate() + 280);
 
         breedings.push({
             id: Date.now(),
-            tag: document.getElementById('breedTag').value.trim(),
+            tag: tag,
             bull: document.getElementById('breedBull').value.trim(),
             date: document.getElementById('breedDate').value,
             hpl: hplDate.toISOString().slice(0, 10)
         });
         db.ref('farm_breeding').set(breedings).then(() => {
             alert('Data IB berhasil ditambahkan!');
-            document.getElementById('breedTag').value = '';
             document.getElementById('breedBull').value = '';
         });
     }
@@ -722,15 +878,17 @@
 
     function saveHealth(e) {
         e.preventDefault();
+        let tag = document.getElementById('healthTagSelect').value;
+        if(!tag) { alert('Silakan pilih sapi terlebih dahulu!'); return; }
+
         healths.push({
             id: Date.now(),
-            tag: document.getElementById('healthTag').value.trim(),
+            tag: tag,
             desc: document.getElementById('healthDesc').value.trim(),
             date: document.getElementById('healthDate').value
         });
         db.ref('farm_health').set(healths).then(() => {
             alert('Data medis disimpan!');
-            document.getElementById('healthTag').value = '';
             document.getElementById('healthDesc').value = '';
         });
     }
