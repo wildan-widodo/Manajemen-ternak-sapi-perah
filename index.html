@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="1.7.0-dairy-farm-barcode">
+    <meta name="app-version" content="1.8.0-dairy-farm-barcode">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -40,6 +40,10 @@
         .btn-danger { background: #c62828; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-secondary { background: #757575; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
         .btn-link-share { background: #607d8b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px; }
+
+        .mode-toggle { display: flex; gap: 10px; margin-bottom: 15px; background: #f1f3f5; padding: 5px; border-radius: 6px; }
+        .mode-btn { flex: 1; padding: 8px 12px; border: none; background: transparent; cursor: pointer; font-weight: bold; color: #666; border-radius: 4px; font-size: 0.85rem; }
+        .mode-btn.active { background: #1976d2; color: white; }
 
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; white-space: nowrap; }
@@ -258,23 +262,34 @@
         </div>
     </div>
 
-    <!-- SLIDE 4: PRODUKSI SUSU (DENGAN BARCODE SCANNER INDIVIDUAL PER SAPI) -->
+    <!-- SLIDE 4: PRODUKSI SUSU (DENGAN SAKELAR 2 MODE INPUT: INDIVIDUAL & BULK/TOTAL TANGKI) -->
     <div class="slide-section" id="slide4">
         <div class="card">
-            <h3>Pencatatan Pemerahan Susu Individual Per Sapi</h3>
+            <h3>Pencatatan Pemerahan Susu Harian</h3>
+            
+            <!-- Sakelar Pilihan Mode Input -->
+            <div class="mode-toggle">
+                <button type="button" class="mode-btn active" id="btnModeIndividual" onclick="switchMilkMode('individual')">🐄 Mode Individual (Per Ekor)</button>
+                <button type="button" class="mode-btn" id="btnModeBulk" onclick="switchMilkMode('bulk')">🥛 Mode Total Tangki (Bulk)</button>
+            </div>
+
             <form onsubmit="saveMilk(event)">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                    <div class="form-group">
+                    
+                    <!-- Form Khusus Mode Individual -->
+                    <div class="form-group" id="groupMilkTag">
                         <label>Pilih / Scan Sapi (EarTag)</label>
-                        <select id="milkTagSelect" required>
+                        <select id="milkTagSelect">
                             <option value="">-- Pilih Sapi Terdaftar --</option>
                         </select>
                         <button type="button" class="btn-scanner" onclick="openScannerForSelect('milkTagSelect', true)">📷 Scan Barcode EarTag Sapi</button>
                     </div>
+
                     <div class="form-group">
                         <label>Tanggal Pemerahan</label>
                         <input type="date" id="milkDate" required>
                     </div>
+
                     <div class="form-group">
                         <label>Sesi Pemerahan</label>
                         <select id="milkSession">
@@ -282,20 +297,22 @@
                             <option value="Sore">Sore</option>
                         </select>
                     </div>
+
                     <div class="form-group">
-                        <label>Hasil Susu (Liter)</label>
+                        <label id="lblMilkVolume">Hasil Susu Per Ekor (Liter)</label>
                         <input type="number" step="0.1" id="milkVolume" placeholder="Contoh: 14.5" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Catatan Susu Sapi</button>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Catatan Produksi Susu</button>
             </form>
         </div>
+
         <div class="card">
-            <h3>Riwayat Produksi Susu Per Ekor Sapi</h3>
+            <h3>Riwayat Produksi Susu Farm</h3>
             <div class="table-responsive">
                 <table>
                     <thead>
-                        <tr><th>Tanggal</th><th>EarTag Sapi</th><th>Sesi</th><th>Hasil (Liter)</th><th>Aksi</th></tr>
+                        <tr><th>Tanggal</th><th>Tipe / EarTag Sapi</th><th>Sesi</th><th>Hasil (Liter)</th><th>Aksi</th></tr>
                     </thead>
                     <tbody id="milkTableBody">
                         <tr><td colspan="5" style="text-align: center; color: #777;">Memuat data...</td></tr>
@@ -488,6 +505,7 @@
     let activeTargetInputId = null;
     let activeTargetSelectId = null;
     let autoFocusVolume = false;
+    let milkInputMode = 'individual'; // Mode default: 'individual' atau 'bulk'
 
     function setDefaultDates() {
         const todayStr = new Date().toISOString().slice(0, 10);
@@ -548,6 +566,32 @@
             input.value = new Intl.NumberFormat('id-ID').format(parseInt(val, 10));
         } else {
             input.value = "";
+        }
+    }
+
+    // --- LOGIC SAKELAR MODE PRODUKSI SUSU ---
+    function switchMilkMode(mode) {
+        milkInputMode = mode;
+        const btnIndiv = document.getElementById('btnModeIndividual');
+        const btnBulk = document.getElementById('btnModeBulk');
+        const groupTag = document.getElementById('groupMilkTag');
+        const lblVolume = document.getElementById('lblMilkVolume');
+        const inputVolume = document.getElementById('milkVolume');
+
+        if (mode === 'individual') {
+            btnIndiv.className = 'mode-btn active';
+            btnBulk.className = 'mode-btn';
+            groupTag.style.display = 'block';
+            document.getElementById('milkTagSelect').setAttribute('required', 'true');
+            lblVolume.innerText = 'Hasil Susu Per Ekor (Liter)';
+            inputVolume.placeholder = 'Contoh: 14.5';
+        } else {
+            btnBulk.className = 'mode-btn active';
+            btnIndiv.className = 'mode-btn';
+            groupTag.style.display = 'none';
+            document.getElementById('milkTagSelect').removeAttribute('required');
+            lblVolume.innerText = 'Total Susu Tangki Pendingin (Liter)';
+            inputVolume.placeholder = 'Contoh: 450';
         }
     }
 
@@ -812,23 +856,30 @@
         });
     }
 
-    // --- SUSU (DENGAN EARTAG DARI DROPDOWN / SCANNER) ---
+    // --- SUSU (MENDUKUNG 2 MODE: INDIVIDUAL & BULK TANGKI) ---
     function saveMilk(e) {
         e.preventDefault();
-        let tag = document.getElementById('milkTagSelect').value;
-        if(!tag) { alert('Silakan pilih atau scan sapi terlebih dahulu!'); return; }
+        let tag = milkInputMode === 'individual' ? document.getElementById('milkTagSelect').value : 'TOTAL TANGKI (BULK)';
+        
+        if(milkInputMode === 'individual' && !tag) { 
+            alert('Silakan pilih atau scan sapi terlebih dahulu!'); 
+            return; 
+        }
 
         milks.push({
             id: Date.now(),
+            mode: milkInputMode,
             tag: tag,
             date: document.getElementById('milkDate').value,
             session: document.getElementById('milkSession').value,
             volume: parseFloat(document.getElementById('milkVolume').value)
         });
         db.ref('farm_milk').set(milks).then(() => {
-            alert(`Catatan susu untuk sapi ${tag} disimpan!`);
+            alert(`Catatan susu (${milkInputMode === 'individual' ? 'Sapi ' + tag : 'Total Tangki'}) disimpan!`);
             document.getElementById('milkVolume').value = '';
-            document.getElementById('milkTagSelect').value = '';
+            if(milkInputMode === 'individual') {
+                document.getElementById('milkTagSelect').value = '';
+            }
             setDefaultDates();
         });
     }
@@ -845,7 +896,10 @@
 
         milks.forEach(i => {
             if(i.date === todayStr) totalToday += i.volume;
-            let tagDisplay = i.tag ? `<b>${i.tag}</b>` : '<span style="color:#888;">-</span>';
+            let tagDisplay = (i.tag && i.tag !== 'TOTAL TANGKI (BULK)') 
+                ? `<b>${i.tag}</b>` 
+                : `<span class="badge badge-warning">TOTAL TANGKI</span>`;
+            
             tbody.innerHTML += `<tr><td>${i.date}</td><td>${tagDisplay}</td><td>${i.session}</td><td><b>${i.volume} Liter</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
         });
         document.getElementById('statMilkToday').innerText = totalToday.toFixed(1) + ' Liter';
