@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="2.1.1-dairy-farm-unified-freshUI">
+    <meta name="app-version" content="2.2.0-dairy-farm-unified-advanced">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -43,19 +43,7 @@
 
         /* UI DASHBOARD FRESH & INTERAKTIF */
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f4f9f5 100%);
-            border: 1px solid #e0e0e0;
-            border-left: 6px solid #2e7d32;
-            padding: 20px 25px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+        .stat-card { background: linear-gradient(135deg, #ffffff 0%, #f4f9f5 100%); border: 1px solid #e0e0e0; border-left: 6px solid #2e7d32; padding: 20px 25px; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.04); display: flex; flex-direction: column; justify-content: space-between; }
         .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .stat-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .stat-title { color: #666; font-size: 0.9rem; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -64,7 +52,6 @@
         .stat-action { font-size: 0.85rem; color: #2e7d32; font-weight: bold; display: flex; align-items: center; gap: 5px; opacity: 0.9; }
         .stat-card:hover .stat-action { opacity: 1; transform: translateX(3px); transition: all 0.2s; }
 
-        /* Warna Custom Stat Cards */
         .card-blue { border-left-color: #1976d2; background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%); }
         .card-blue .val, .card-blue .stat-action { color: #1976d2; }
         .card-orange { border-left-color: #f57c00; background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%); }
@@ -75,19 +62,7 @@
         .card-teal .val, .card-teal .stat-action { color: #00897b; }
 
         /* SCANNER BANNER UI */
-        .scanner-banner {
-            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 8px 20px rgba(13, 71, 161, 0.25);
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
+        .scanner-banner { background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%); color: white; padding: 30px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 20px rgba(13, 71, 161, 0.25); flex-wrap: wrap; gap: 20px; margin-bottom: 25px; }
         .scanner-info h3 { margin: 0 0 10px 0; font-size: 1.5rem; letter-spacing: 0.5px; }
         .scanner-info p { margin: 0; font-size: 1rem; opacity: 0.9; max-width: 600px; line-height: 1.6; }
         .btn-scanner-huge { background: #fff; color: #0d47a1; font-weight: bold; padding: 15px 30px; border-radius: 30px; border: none; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
@@ -102,6 +77,7 @@
         .btn-primary:hover { background: #1b5e20; }
         .btn-scanner { background: #1976d2; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin-top: 8px; display: inline-flex; align-items: center; gap: 6px; font-weight: bold; }
         .btn-danger { background: #c62828; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+        .btn-success { background: #00897b; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight:bold; }
         .btn-secondary { background: #757575; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
         .btn-link-share { background: #eceff1; color: #455a64; border: 1px solid #cfd8dc; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
         .btn-link-share:hover { background: #cfd8dc; }
@@ -124,6 +100,7 @@
         .badge-success { background: #2e7d32; }
         .badge-warning { background: #f57c00; }
         .badge-danger { background: #c62828; }
+        .badge-primary { background: #1976d2; }
         .nav-badge { position: absolute; top: -8px; right: -8px; background: #e53935; color: white; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; font-size: 0.75rem; font-weight: bold; display: none; text-align: center; box-shadow: 0 2px 5px rgba(229, 57, 53, 0.4); }
 
         .info-box { background: #f0f7ff; border-left: 4px solid #1976d2; padding: 12px 15px; margin-bottom: 15px; border-radius: 6px; }
@@ -136,12 +113,19 @@
 
 <!-- LOGIN FIREBASE -->
 <div class="login-container" id="loginCard">
-    <h2 style="margin-bottom: 5px;">Manajemen Farm Sapi FH Pro</h2>
+    <h2 style="margin-bottom: 5px;">Manajemen AWW FARM Pro</h2>
     <p style="font-size: 0.9rem; color: #777; margin-bottom: 25px;">Silakan login akun pengelola</p>
+    
+    <div style="background:#e3f2fd; padding:10px; border-radius:6px; margin-bottom:20px; font-size:0.8rem; color:#0d47a1; text-align:left;">
+        <b>💡 Info Akses Multi-User:</b><br>
+        - Email mengandung kata <b>"admin" / "owner"</b> mendapat akses penuh (Hapus Data & Keuangan).<br>
+        - Email biasa otomatis menjadi <b>Pekerja Kandang</b> (Hanya input ternak & susu).
+    </div>
+
     <form onsubmit="handleLogin(event)">
         <div class="form-group">
             <label>Alamat Email</label>
-            <input type="email" id="loginEmail" placeholder="admin@farm.com" required>
+            <input type="email" id="loginEmail" placeholder="contoh: admin@farm.com" required>
         </div>
         <div class="form-group">
             <label>Password Akun</label>
@@ -158,7 +142,8 @@
         <h2 style="margin: 0; color: #1b5e20; display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.8rem;">🐄</span> Smart Farm Sapi Perah FH Pro
         </h2>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span id="userRoleBadge" class="badge badge-primary" style="font-size: 0.85rem; padding: 6px 12px; margin-right: 10px;">Role: Admin</span>
             <button class="btn-link-share" onclick="openLinkModal()">🔗 Tautan & QR</button>
             <button class="btn-danger" onclick="handleLogout()" style="width: auto; padding: 8px 16px; border-radius: 6px;">🚪 Keluar</button>
         </div>
@@ -170,7 +155,7 @@
         <button class="main-nav-btn" onclick="switchMainTab('modules')">📂 Menu Pilihan Modul Terpadu <span id="badgeNavModules" class="nav-badge">!</span></button>
     </div>
 
-    <!-- 1. HALAMAN UTAMA: DASHBOARD (UI BARU FRESH & INTERAKTIF) -->
+    <!-- 1. HALAMAN UTAMA: DASHBOARD -->
     <div class="slide-section active" id="dashboardSection">
         
         <!-- WIDGET NOTIFIKASI -->
@@ -181,7 +166,7 @@
             </div>
         </div>
 
-        <!-- DASHBOARD GRID UI BARU -->
+        <!-- DASHBOARD GRID -->
         <div class="dashboard-grid">
             <div class="stat-card" onclick="jumpToModule('cows')">
                 <div class="stat-header">
@@ -228,7 +213,7 @@
                 <div class="stat-action">Cek Estimasi HPL ➔</div>
             </div>
             
-            <div class="stat-card card-orange" style="background: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%); border-left-color: #e65100;" onclick="jumpToModule('finance')">
+            <div class="stat-card card-orange" id="cardFinance" style="background: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%); border-left-color: #e65100;" onclick="jumpToModule('finance')">
                 <div class="stat-header">
                     <h4 class="stat-title">Saldo Kas Berjalan</h4>
                     <span class="stat-icon">💰</span>
@@ -238,11 +223,11 @@
             </div>
         </div>
 
-        <!-- BANNER SCANNER UI BARU -->
+        <!-- BANNER SCANNER -->
         <div class="scanner-banner">
             <div class="scanner-info">
                 <h3>📷 Sistem Terintegrasi Barcode Scanner</h3>
-                <p>Gunakan kamera perangkat untuk memindai EarTag sapi secara instan. Mempercepat akses profil, riwayat IB, rekap medis, dan input data tanpa mengetik.</p>
+                <p>Gunakan kamera perangkat untuk memindai EarTag sapi secara instan. Mempercepat akses profil silsilah, riwayat IB, rekap medis, dan input data tanpa mengetik.</p>
             </div>
             <button class="btn-scanner-huge" onclick="openScanner()">
                 <span style="font-size: 1.4rem;">🔎</span> Pindai EarTag Sekarang
@@ -257,23 +242,24 @@
         <div class="unified-module-bar">
             <label for="moduleSelector">🚀 <b>Pilih Modul Pintar:</b></label>
             <select id="moduleSelector" onchange="switchSubModule(this.value)">
-                <option value="cows">🐄 1. Data Populasi Sapi</option>
-                <option value="health">💉 2. Kesehatan, Rekap Medis & Inseminasi Buatan (IB)</option>
+                <option value="cows">🐄 1. Data Populasi Sapi & Silsilah</option>
+                <option value="health">💉 2. Kesehatan, Rekap Medis & Inseminasi Buatan</option>
                 <option value="milk">🥛 3. Pencatatan Produksi Susu (2 Mode)</option>
                 <option value="feed">🌾 4. Manajemen Stok Pakan & Hijauan (HMT)</option>
                 <option value="compost">🌱 5. Pengolahan Kompos Limbah Kandang</option>
                 <option value="lactation">📈 6. Kurva Laktasi & Tren Sapi Individual</option>
                 <option value="bcs">⚖️ 7. Sistem Skoring Kondisi Tubuh (BCS)</option>
-                <option value="analysis">📉 8. Analisis Efisiensi Pakan vs Hasil Susu</option>
-                <option value="finance">💰 9. Keuangan & Laba/Rugi Farm</option>
-                <option value="export">📑 10. Ekspor Laporan (PDF & Excel)</option>
+                <option value="analysis" class="admin-only-opt">📉 8. Analisis Efisiensi Pakan vs Hasil Susu</option>
+                <option value="finance" class="admin-only-opt">💰 9. Keuangan & Laba/Rugi Farm</option>
+                <option value="crm" class="admin-only-opt">🤝 10. Database Pelanggan & Piutang (CRM)</option>
+                <option value="export" class="admin-only-opt">📑 11. Ekspor Laporan (PDF & Excel)</option>
             </select>
         </div>
 
         <!-- SUB-MODUL 1: DATA TERNAK -->
         <div class="sub-module-section active" id="sub_cows">
             <div class="card">
-                <h3>Tambah Data Sapi Baru</h3>
+                <h3>Tambah Data Sapi Baru & Silsilah Pedigree</h3>
                 <form onsubmit="saveCow(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group">
@@ -286,7 +272,7 @@
                             <select id="cowStatus" required>
                                 <option value="Laktasi">Laktasi (Produksi Susu)</option>
                                 <option value="Kering Kandang">Kering Kandang (Dry Period)</option>
-                                <option value="Bunting">Bunting (Dalam Bunting)</option>
+                                <option value="Bunting">Bunting (Dalam Kehamilan)</option>
                                 <option value="Dara / Calon Indukan">Dara / Calon Indukan</option>
                                 <option value="Pedet">Pedet (Anakan)</option>
                             </select>
@@ -294,6 +280,14 @@
                         <div class="form-group">
                             <label>Umur Saat Didaftarkan (Bulan)</label>
                             <input type="number" id="cowAge" placeholder="Contoh: 4" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Silsilah: Bapak (Kode Straw Pejantan)</label>
+                            <input type="text" id="cowSire" placeholder="Contoh: Bull 101 / Tidak Diketahui">
+                        </div>
+                        <div class="form-group">
+                            <label>Silsilah: Ibu (EarTag Indukan)</label>
+                            <input type="text" id="cowDam" placeholder="Contoh: FH-099 / Tidak Diketahui">
                         </div>
                     </div>
                     <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Data Sapi</button>
@@ -304,10 +298,10 @@
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr><th>EarTag</th><th>Status & Kategori</th><th>Umur Aktual</th><th>Aksi</th></tr>
+                            <tr><th>EarTag</th><th>Silsilah (Bapak/Ibu)</th><th>Status & Kategori</th><th>Umur Aktual</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="cowTableBody">
-                            <tr><td colspan="4" style="text-align: center; color: #777;">Memuat data...</td></tr>
+                            <tr><td colspan="5" style="text-align: center; color: #777;">Memuat data...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -317,7 +311,7 @@
         <!-- SUB-MODUL 2: KESEHATAN & IB -->
         <div class="sub-module-section" id="sub_health">
             <div class="card">
-                <h3>Pencatatan Inseminasi Buatan (IB) & Kehamilan</h3>
+                <h3>Pencatatan Inseminasi Buatan (IB) <span style="font-size:0.85rem; color:#f57c00;">*Dilengkapi Anti-Inbreeding</span></h3>
                 <form onsubmit="saveBreeding(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group">
@@ -443,7 +437,7 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 4: PAKAN & NUTRISI (Satuan Kg) -->
+        <!-- SUB-MODUL 4: PAKAN -->
         <div class="sub-module-section" id="sub_feed">
             <div class="card">
                 <h3>Manajemen Stok Pakan & Hijauan (HMT)</h3>
@@ -473,14 +467,14 @@
                             <tr><th>Nama Bahan Pakan</th><th>Jumlah Stok</th><th>Batas Kritis</th><th>Status Stok</th><th>Aksi</th></tr>
                         </thead>
                         <tbody id="feedTableBody">
-                            <tr><td colspan="5" style="text-align: center; color: #777;">Belum ada stok pakan tersimpan.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; color: #777;">Belum ada stok pakan.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- SUB-MODUL 5: KOMPOS (Satuan Kg) -->
+        <!-- SUB-MODUL 5: KOMPOS -->
         <div class="sub-module-section" id="sub_compost">
             <div class="card">
                 <h3>Manajemen Pengolahan Kompos Limbah Kandang</h3>
@@ -526,7 +520,6 @@
         <div class="sub-module-section" id="sub_lactation">
             <div class="card">
                 <h3>📈 Kurva Laktasi & Tren Produksi Sapi Individual</h3>
-                <p style="color:#555; font-size:0.95rem;">Pantau performa puncak produksi dan perkembangan liter susu per ekor sapi laktasi dari waktu ke waktu.</p>
                 <div class="form-group" style="max-width:350px;">
                     <label>Pilih Sapi Laktasi</label>
                     <select id="lactationCowSelect" onchange="renderLactationCurve()">
@@ -585,12 +578,10 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 8: ANALISIS EFISIENSI PAKAN -->
+        <!-- SUB-MODUL 8: ANALISIS EFISIENSI -->
         <div class="sub-module-section" id="sub_analysis">
             <div class="card">
-                <h3>📉 Analisis Efisiensi Pakan vs Hasil Susu (Milk-to-Feed Ratio)</h3>
-                <p style="color:#555; font-size:0.95rem;">Analisis rasio efisiensi biaya pakan konsentrat terhadap total volume susu yang dihasilkan untuk memantau profitabilitas farm.</p>
-                
+                <h3>📉 Analisis Efisiensi Pakan vs Hasil Susu</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 15px;">
                     <div style="background:#e8f5e9; padding:20px; border-radius:8px; border-left:5px solid #2e7d32;">
                         <small style="color:#2e7d32; font-weight:bold;">TOTAL PRODUKSI SUSU</small>
@@ -663,12 +654,63 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 10: EKSPOR LAPORAN -->
+        <!-- SUB-MODUL 10: CRM & PIUTANG PELANGGAN -->
+        <div class="sub-module-section" id="sub_crm">
+            <div class="card">
+                <h3>🤝 Database Pelanggan & Tagihan (Piutang)</h3>
+                <p style="color:#555; font-size:0.95rem;">Catat penjualan Susu / Kompos ke Koperasi, Pengepul, atau pihak ketiga. Pantau tagihan yang belum dibayar.</p>
+                <form onsubmit="saveCRM(event)">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label>Tanggal Transaksi</label>
+                            <input type="date" id="crmDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Pelanggan / Koperasi</label>
+                            <input type="text" id="crmCustomer" placeholder="Contoh: Koperasi Susu Makmur" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Produk Terjual</label>
+                            <select id="crmProduct">
+                                <option value="Susu Segar">Susu Segar</option>
+                                <option value="Pupuk Kompos">Pupuk Kompos</option>
+                                <option value="Penjualan Sapi">Penjualan Sapi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Total Tagihan (Rp)</label>
+                            <input type="text" id="crmNominal" placeholder="Contoh: 2.000.000" oninput="formatNominalInput(this)" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Status Pembayaran</label>
+                            <select id="crmStatus">
+                                <option value="Piutang">Piutang (Belum Dibayar)</option>
+                                <option value="Lunas">Lunas (Tunai)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Transaksi Penjualan</button>
+                </form>
+            </div>
+            <div class="card">
+                <h3>Daftar Riwayat Penjualan & Status Tagihan</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr><th>Tanggal</th><th>Pelanggan</th><th>Produk</th><th>Total (Rp)</th><th>Status</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="crmTableBody">
+                            <tr><td colspan="6" style="text-align: center; color: #777;">Belum ada riwayat penjualan CRM.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUB-MODUL 11: EKSPOR LAPORAN -->
         <div class="sub-module-section" id="sub_export">
             <div class="card">
                 <h3 style="color:#00796b;">📑 Ekspor Laporan Laba Rugi & Rekapituasi Farm</h3>
-                <p style="color:#555; font-size:1rem;">Unduh data rekapan operasional AWW FARM langsung ke dalam file PDF atau Excel Spreadsheet (.XLSX) hanya dengan 1 klik.</p>
-                
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top:25px;">
                     <div style="background:#e0f2f1; padding:25px; border-radius:12px; border-left:6px solid #00796b; text-align:center; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
                         <h4 style="color:#004d40; font-size:1.2rem;">📊 Laporan PDF Komprehensif</h4>
@@ -685,7 +727,6 @@
         </div>
 
     </div>
-
 </div>
 
 <!-- POPUP MODAL ALERT WARNING ANTIBIOTIK/OBAT BEEP AUDIO -->
@@ -740,14 +781,15 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    let cows = [], milks = [], composts = [], finances = [], breedings = [], healths = [], feeds = [], bcss = [];
+    let cows = [], milks = [], composts = [], finances = [], breedings = [], healths = [], feeds = [], bcss = [], crms = [];
     let html5QrCode = null;
     let activeTargetInputId = null;
     let activeTargetSelectId = null;
     let autoFocusVolume = false;
     let milkInputMode = 'individual';
+    let currentUserRole = 'pekerja'; // Default Role
 
-    // FUNGSI UMUR DINAMIS & AUTO-UPDATE KATEGORI SAPI
+    // --- FUNGSI UMUR DINAMIS & AUTO-UPDATE KATEGORI ---
     function getDynamicCowInfo(cow) {
         let monthsPassed = 0;
         if (cow.regDate) {
@@ -757,9 +799,7 @@
         let currentAge = (cow.initialAge !== undefined ? cow.initialAge : parseInt(cow.age || 0)) + monthsPassed;
         let currentStatus = cow.status;
         
-        if (currentStatus === 'Pedet' && currentAge >= 6) {
-            currentStatus = 'Dara / Calon Indukan';
-        }
+        if (currentStatus === 'Pedet' && currentAge >= 6) { currentStatus = 'Dara / Calon Indukan'; }
         return { currentAge, currentStatus };
     }
 
@@ -771,24 +811,33 @@
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(800, ctx.currentTime);
             gain.gain.setValueAtTime(0.3, ctx.currentTime);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            osc.start();
-            osc.stop(ctx.currentTime + 0.6);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(); osc.stop(ctx.currentTime + 0.6);
         } catch (e) { console.log("Audio not allowed"); }
         if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
     }
 
     function setDefaultDates() {
         const todayStr = new Date().toISOString().slice(0, 10);
-        ['breedDate', 'healthDate', 'milkDate', 'compostDate', 'bcsDate'].forEach(id => {
+        ['breedDate', 'healthDate', 'milkDate', 'compostDate', 'bcsDate', 'crmDate'].forEach(id => {
             const el = document.getElementById(id);
             if (el && !el.value) el.value = todayStr;
         });
     }
 
+    // --- AUTHENTICATION & ROLE MANAGEMENT ---
     auth.onAuthStateChanged(user => {
         if (user) {
+            // SET ROLE: Jika email mengandung kata 'admin' / 'owner' atau email khusus Wildan = Admin. Sisanya Pekerja.
+            let emailLower = user.email.toLowerCase();
+            if (emailLower.includes('admin') || emailLower.includes('owner') || emailLower === 'wildansambi02@gmail.com' || emailLower === 'wildansambi69@gmail.com') {
+                currentUserRole = 'admin';
+            } else {
+                currentUserRole = 'pekerja';
+            }
+            
+            applyRoleRestrictions();
+
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('appContainer').style.display = 'block';
             setDefaultDates();
@@ -806,6 +855,37 @@
     }
     function handleLogout() { auth.signOut(); }
 
+    function applyRoleRestrictions() {
+        const isPekerja = currentUserRole === 'pekerja';
+        
+        // Update Badge Role
+        const roleBadge = document.getElementById('userRoleBadge');
+        if(isPekerja) {
+            roleBadge.innerText = 'Role: Pekerja Kandang';
+            roleBadge.className = 'badge badge-warning';
+        } else {
+            roleBadge.innerText = 'Role: Owner / Admin';
+            roleBadge.className = 'badge badge-primary';
+        }
+
+        // Hide Dashboard Finance Card
+        document.getElementById('cardFinance').style.display = isPekerja ? 'none' : 'flex';
+        
+        // Hide Restricted Modules in Dropdown
+        const options = document.querySelectorAll('.admin-only-opt');
+        options.forEach(opt => {
+            opt.style.display = isPekerja ? 'none' : 'block';
+        });
+
+        // If Pekerja is somehow on a restricted module, kick them to module 1 (Cows)
+        if (isPekerja) {
+            const currentMod = document.getElementById('moduleSelector').value;
+            if (['analysis', 'finance', 'export', 'crm'].includes(currentMod)) {
+                jumpToModule('cows');
+            }
+        }
+    }
+
     function loadAllData() {
         db.ref('farm_cows').on('value', snap => { cows = snap.val() || []; renderCows(); updateCowDropdowns(); });
         db.ref('farm_milk').on('value', snap => { milks = snap.val() || []; renderMilk(); updateAnalysis(); });
@@ -815,9 +895,10 @@
         db.ref('farm_health').on('value', snap => { healths = snap.val() || []; renderHealth(); checkAllAlerts(); });
         db.ref('farm_feed').on('value', snap => { feeds = snap.val() || []; renderFeed(); checkAllAlerts(); });
         db.ref('farm_bcs').on('value', snap => { bcss = snap.val() || []; renderBCS(); });
+        db.ref('farm_crm').on('value', snap => { crms = snap.val() || []; renderCRM(); });
     }
 
-    // --- NAVIGASI UTAMA & MODUL TERPADU ---
+    // --- NAVIGASI UTAMA ---
     function switchMainTab(tabName) {
         const dashSec = document.getElementById('dashboardSection');
         const modSec = document.getElementById('modulesSection');
@@ -844,15 +925,12 @@
     }
 
     function switchSubModule(subKey) {
-        document.querySelectorAll('.sub-module-section').forEach(el => {
-            el.className = 'sub-module-section';
-        });
+        document.querySelectorAll('.sub-module-section').forEach(el => { el.className = 'sub-module-section'; });
         const targetEl = document.getElementById('sub_' + subKey);
         if (targetEl) targetEl.className = 'sub-module-section active';
     }
 
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
-
     function formatNominalInput(input) {
         let val = input.value.replace(/\D/g, "");
         input.value = val ? new Intl.NumberFormat('id-ID').format(parseInt(val, 10)) : "";
@@ -866,16 +944,12 @@
         const lblVolume = document.getElementById('lblMilkVolume');
 
         if (mode === 'individual') {
-            btnIndiv.className = 'mode-btn active';
-            btnBulk.className = 'mode-btn';
-            groupTag.style.display = 'block';
-            document.getElementById('milkTagSelect').setAttribute('required', 'true');
+            btnIndiv.className = 'mode-btn active'; btnBulk.className = 'mode-btn';
+            groupTag.style.display = 'block'; document.getElementById('milkTagSelect').setAttribute('required', 'true');
             lblVolume.innerText = 'Hasil Susu Per Ekor (Liter)';
         } else {
-            btnBulk.className = 'mode-btn active';
-            btnIndiv.className = 'mode-btn';
-            groupTag.style.display = 'none';
-            document.getElementById('milkTagSelect').removeAttribute('required');
+            btnBulk.className = 'mode-btn active'; btnIndiv.className = 'mode-btn';
+            groupTag.style.display = 'none'; document.getElementById('milkTagSelect').removeAttribute('required');
             lblVolume.innerText = 'Total Susu Tangki Pendingin (Liter)';
         }
     }
@@ -895,30 +969,44 @@
         });
     }
 
+    // --- ALERTS: BIRAHI, OBAT, STOK PAKAN & KERING KANDANG (DRY-OFF) ---
     function checkAllAlerts() {
         let alertsHTML = '';
         let healthAlertCount = 0;
         let feedAlert = false;
         const today = new Date();
 
+        // 1. Alert Masa Henti Obat
         const drugKeywords = ['antibiotik', 'obat', 'mastitis', 'infeksi', 'injeksi'];
-        const activeMedCows = healths.filter(h => {
-            return drugKeywords.some(kw => h.desc.toLowerCase().includes(kw));
-        });
+        const activeMedCows = healths.filter(h => { return drugKeywords.some(kw => h.desc.toLowerCase().includes(kw)); });
 
         if (activeMedCows.length > 0) {
             healthAlertCount = activeMedCows.length;
             alertsHTML += `<div class="info-box-danger"><p><b>🔴 ALERT MASA HENTI OBAT (${activeMedCows.length} Ekor Sapi):</b> Susu dari sapi berikut tidak boleh dicampur ke tangki utama karena pengobatan antibiotik: <br><b>${activeMedCows.map(c=>c.tag).join(', ')}</b></p></div>`;
         }
 
+        // 2. Pengingat Birahi (21 Hari) & Kering Kandang (Dry Off: 60 hari sblm HPL)
         breedings.forEach(b => {
             let ibDate = new Date(b.date);
             let diffDays = Math.floor((today - ibDate) / (1000 * 60 * 60 * 24));
             if (diffDays >= 18 && diffDays <= 23) {
-                alertsHTML += `<div class="info-box-warning"><p><b>🟡 PENGINGAT SIKLUS BIRAHI (Hari ke-${diffDays}):</b> Sapi <b>${b.tag}</b> memasuki masa evaluasi siklus 21 hari pasca-IB. Pantau tanda birahi ulang!</p></div>`;
+                alertsHTML += `<div class="info-box-warning"><p><b>🟡 PENGINGAT SIKLUS BIRAHI (Hari ke-${diffDays}):</b> Sapi <b>${b.tag}</b> memasuki masa evaluasi 21 hari pasca-IB. Pantau tanda birahi ulang!</p></div>`;
+            }
+
+            let hplDate = new Date(b.hpl);
+            let diffHplDays = Math.floor((hplDate - today) / (1000 * 60 * 60 * 24));
+            
+            // JIKA SISA HPL <= 60 HARI (Masa Kering Kandang / Dry Off)
+            if (diffHplDays <= 60 && diffHplDays >= 0) {
+                let cowData = cows.find(c => c.tag === b.tag);
+                // Hanya ingatkan jika status sapi ini masih diperah (Laktasi)
+                if(cowData && cowData.status === 'Laktasi') {
+                    alertsHTML += `<div class="info-box-warning" style="border-left-color:#e65100; background:#fff3e0;"><p><b>🛑 PERINGATAN KERING KANDANG (DRY-OFF):</b> Sapi laktasi <b>${b.tag}</b> memasuki masa 60 hari sebelum Melahirkan (HPL: ${b.hpl}). <b>Hentikan pemerahan</b> untuk pemulihan ambing!</p></div>`;
+                }
             }
         });
 
+        // 3. Alert Stok Pakan
         const criticalFeeds = feeds.filter(f => parseFloat(f.qty) <= parseFloat(f.min));
         if (criticalFeeds.length > 0) {
             feedAlert = true;
@@ -930,33 +1018,23 @@
         }
 
         document.getElementById('dashboardAlertsContainer').innerHTML = alertsHTML;
-
         const bNavM = document.getElementById('badgeNavModules');
-        if (healthAlertCount > 0 || feedAlert) {
-            bNavM.innerText = '!';
-            bNavM.style.display = 'inline-block';
-        } else { bNavM.style.display = 'none'; }
+        if (healthAlertCount > 0 || feedAlert) { bNavM.innerText = '!'; bNavM.style.display = 'inline-block'; } else { bNavM.style.display = 'none'; }
     }
 
     // --- BARCODE SCANNER ---
     function openScanner(targetInputId = null) {
-        activeTargetInputId = targetInputId;
-        activeTargetSelectId = null;
-        autoFocusVolume = false;
+        activeTargetInputId = targetInputId; activeTargetSelectId = null; autoFocusVolume = false;
         document.getElementById('scannerModal').style.display = 'flex';
         if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } }, onScanSuccess, () => {})
-            .catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
+        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } }, onScanSuccess, () => {}).catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
     }
 
     function openScannerForSelect(targetSelectId, focusVolume = false) {
-        activeTargetSelectId = targetSelectId;
-        activeTargetInputId = null;
-        autoFocusVolume = focusVolume;
+        activeTargetSelectId = targetSelectId; activeTargetInputId = null; autoFocusVolume = focusVolume;
         document.getElementById('scannerModal').style.display = 'flex';
         if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } }, onScanSuccess, () => {})
-            .catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
+        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 150 } }, onScanSuccess, () => {}).catch(err => { alert("Gagal mengaktifkan kamera: " + err); closeScanner(); });
     }
 
     function onScanSuccess(decodedText) {
@@ -977,12 +1055,7 @@
         } else if (activeTargetSelectId) {
             const selectEl = document.getElementById(activeTargetSelectId);
             const found = cows.find(c => c.tag.toLowerCase() === decodedText.toLowerCase());
-            if (found) {
-                selectEl.value = found.tag;
-                if (autoFocusVolume) setTimeout(() => document.getElementById('milkVolume').focus(), 300);
-            } else {
-                alert(`Barcode "${decodedText}" belum terdaftar! Silakan daftarkan sapi terlebih dahulu.`);
-            }
+            if (found) { selectEl.value = found.tag; if (autoFocusVolume) setTimeout(() => document.getElementById('milkVolume').focus(), 300); } else { alert(`Barcode "${decodedText}" belum terdaftar! Silakan daftarkan sapi terlebih dahulu.`); }
         } else {
             handleScannedEarTag(decodedText);
         }
@@ -990,9 +1063,7 @@
 
     function closeDrugAlertModal() { document.getElementById('drugAlertModal').style.display = 'none'; }
     function closeScanner() {
-        if (html5QrCode && html5QrCode.isScanning) {
-            html5QrCode.stop().then(() => { document.getElementById('scannerModal').style.display = 'none'; }).catch(() => { document.getElementById('scannerModal').style.display = 'none'; });
-        } else { document.getElementById('scannerModal').style.display = 'none'; }
+        if (html5QrCode && html5QrCode.isScanning) { html5QrCode.stop().then(() => { document.getElementById('scannerModal').style.display = 'none'; }).catch(() => { document.getElementById('scannerModal').style.display = 'none'; }); } else { document.getElementById('scannerModal').style.display = 'none'; }
     }
 
     function handleScannedEarTag(tag) {
@@ -1004,11 +1075,15 @@
             const cowHealth = healths.filter(h => h.tag.toLowerCase() === tag.toLowerCase());
             let bHTML = cowBreeding.length ? cowBreeding.map(b => `<p><b>IB:</b> ${b.date} | Pejantan: ${b.bull} | HPL: ${b.hpl}</p>`).join('') : '<p style="color:#777;">Belum ada catatan IB.</p>';
             let hHTML = cowHealth.length ? cowHealth.map(h => `<p><b>Medis:</b> ${h.date} | ${h.desc}</p>`).join('') : '<p style="color:#777;">Belum ada catatan medis.</p>';
-            
+            let sireTxt = foundCow.sire ? foundCow.sire : 'Tidak diketahui';
+            let damTxt = foundCow.dam ? foundCow.dam : 'Tidak diketahui';
+
             modalBody.innerHTML = `<h3 style="color:#1976d2;">📋 Profil Sapi: ${foundCow.tag}</h3>
                                    <div style="background:#f0f7ff; padding:15px; border-radius:8px; margin-bottom:15px;">
                                        <p style="margin:5px 0;"><b>Status Kategori:</b> ${info.currentStatus}</p>
                                        <p style="margin:5px 0;"><b>Umur Aktual:</b> ${info.currentAge} Bulan</p>
+                                       <p style="margin:5px 0; color:#455a64;"><b>Bapak (Pejantan):</b> ${sireTxt}</p>
+                                       <p style="margin:5px 0; color:#455a64;"><b>Ibu (Indukan):</b> ${damTxt}</p>
                                    </div>
                                    <h4 style="color:#2e7d32; border-bottom:1px solid #ccc; padding-bottom:5px;">💉 Riwayat IB & Bunting</h4>${bHTML}
                                    <h4 style="color:#c62828; border-bottom:1px solid #ccc; padding-bottom:5px; margin-top:15px;">🩺 Rekap Medis</h4>${hHTML}`;
@@ -1016,9 +1091,11 @@
             modalBody.innerHTML = `<h3 style="color:#c62828;">⚠️ EarTag "${tag}" Belum Terdaftar</h3>
                                    <p>Silakan daftarkan identitas sapi ini:</p>
                                    <form onsubmit="saveCowFromModal(event, '${tag}')">
-                                       <div class="form-group"><label>Status Kategori</label><select id="modalCowStatus" required><option value="Laktasi">Laktasi (Produksi Susu)</option><option value="Bunting">Bunting</option><option value="Dara / Calon Indukan">Dara</option><option value="Pedet">Pedet</option><option value="Kering Kandang">Kering Kandang</option></select></div>
+                                       <div class="form-group"><label>Status Kategori</label><select id="modalCowStatus" required><option value="Laktasi">Laktasi</option><option value="Bunting">Bunting</option><option value="Dara / Calon Indukan">Dara</option><option value="Pedet">Pedet</option><option value="Kering Kandang">Kering Kandang</option></select></div>
                                        <div class="form-group"><label>Umur Awal (Bulan)</label><input type="number" id="modalCowAge" required></div>
-                                       <button type="submit" class="btn-primary" style="padding:12px; font-size:1.05rem;">Simpan Registrasi Sapi</button>
+                                       <div class="form-group"><label>Bapak (Kode Straw)</label><input type="text" id="modalCowSire" placeholder="Opsional"></div>
+                                       <div class="form-group"><label>Ibu (EarTag)</label><input type="text" id="modalCowDam" placeholder="Opsional"></div>
+                                       <button type="submit" class="btn-primary" style="padding:12px; font-size:1.05rem;">Simpan Registrasi</button>
                                    </form>`;
         }
         document.getElementById('cowInfoModal').style.display = 'flex';
@@ -1027,12 +1104,13 @@
     function saveCowFromModal(e, tag) {
         e.preventDefault();
         cows.push({ 
-            id: Date.now(), 
-            tag: tag, 
+            id: Date.now(), tag: tag, 
             status: document.getElementById('modalCowStatus').value, 
             age: document.getElementById('modalCowAge').value, 
             initialAge: parseInt(document.getElementById('modalCowAge').value), 
-            regDate: Date.now() 
+            regDate: Date.now(),
+            sire: document.getElementById('modalCowSire').value.trim(),
+            dam: document.getElementById('modalCowDam').value.trim()
         });
         db.ref('farm_cows').set(cows).then(() => { alert('Data Sapi berhasil didaftarkan!'); closeCowInfoModal(); });
     }
@@ -1042,21 +1120,26 @@
     function saveCow(e) {
         e.preventDefault();
         cows.push({ 
-            id: Date.now(), 
-            tag: document.getElementById('cowTag').value.trim(), 
+            id: Date.now(), tag: document.getElementById('cowTag').value.trim(), 
             status: document.getElementById('cowStatus').value, 
             age: document.getElementById('cowAge').value, 
             initialAge: parseInt(document.getElementById('cowAge').value), 
-            regDate: Date.now() 
+            regDate: Date.now(),
+            sire: document.getElementById('cowSire').value.trim(),
+            dam: document.getElementById('cowDam').value.trim()
         });
-        db.ref('farm_cows').set(cows).then(() => { alert('Data Sapi berhasil disimpan!'); document.getElementById('cowTag').value = ''; document.getElementById('cowAge').value = ''; });
+        db.ref('farm_cows').set(cows).then(() => { 
+            alert('Data Sapi berhasil disimpan!'); 
+            document.getElementById('cowTag').value = ''; document.getElementById('cowAge').value = ''; 
+            document.getElementById('cowSire').value = ''; document.getElementById('cowDam').value = ''; 
+        });
     }
     
-    function deleteCow(id) { if(confirm('Yakin ingin menghapus data sapi ini dari farm?')) { cows = cows.filter(i => i.id !== id); db.ref('farm_cows').set(cows); } }
+    function deleteCow(id) { if(confirm('Yakin ingin menghapus data sapi ini?')) { cows = cows.filter(i => i.id !== id); db.ref('farm_cows').set(cows); } }
     
     function renderCows() {
         let tbody = document.getElementById('cowTableBody'); tbody.innerHTML = '';
-        if(!cows.length) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada populasi sapi terdaftar.</td></tr>`;
+        if(!cows.length) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada populasi sapi terdaftar.</td></tr>`;
         
         let totalLactating = 0, totalPregnant = 0;
         
@@ -1068,12 +1151,16 @@
             let statusBadge = info.currentStatus !== i.status ? 
                 `<b>${info.currentStatus}</b> <br><span style="font-size:0.7rem; background:#f57c00; color:white; padding:3px 6px; border-radius:4px; display:inline-block; margin-top:4px;">Naik Kelas Otomatis</span>` : 
                 `<b>${info.currentStatus}</b>`;
+                
+            let pedTxt = `Bpk: ${i.sire ? i.sire : '-'}<br>Ibu: ${i.dam ? i.dam : '-'}`;
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteCow(${i.id})">Hapus</button>` : '-';
 
             tbody.innerHTML += `<tr>
                 <td><b>${i.tag}</b></td>
+                <td style="font-size:0.8rem; color:#555;">${pedTxt}</td>
                 <td>${statusBadge}</td>
                 <td><b style="color:#1976d2; font-size:1.1rem;">${info.currentAge}</b> Bulan</td>
-                <td><button class="btn-danger" onclick="deleteCow(${i.id})">Hapus</button></td>
+                <td>${actBtn}</td>
             </tr>`; 
         });
         
@@ -1082,21 +1169,35 @@
         document.getElementById('statPregnantCows').innerText = totalPregnant + ' Ekor';
     }
 
+    // BREEDING (DENGAN ANTI-INBREEDING)
     function saveBreeding(e) {
         e.preventDefault();
         let tag = document.getElementById('breedTagSelect').value;
+        let bullInput = document.getElementById('breedBull').value.trim();
+        
+        // Cek Inbreeding Pedigree
+        let targetCow = cows.find(c => c.tag === tag);
+        if (targetCow && targetCow.sire && targetCow.sire.toLowerCase() === bullInput.toLowerCase()) {
+            alert("⚠️ WARNING INBREEDING!\nKode Pejantan ini adalah BAPAK dari sapi indukan. Proses IB diblokir untuk mencegah resiko genetik.");
+            return;
+        }
+
         let bDate = new Date(document.getElementById('breedDate').value);
         let hplDate = new Date(bDate); hplDate.setDate(hplDate.getDate() + 280);
-        breedings.push({ id: Date.now(), tag: tag, bull: document.getElementById('breedBull').value.trim(), date: document.getElementById('breedDate').value, hpl: hplDate.toISOString().slice(0, 10) });
+        breedings.push({ id: Date.now(), tag: tag, bull: bullInput, date: document.getElementById('breedDate').value, hpl: hplDate.toISOString().slice(0, 10) });
         db.ref('farm_breeding').set(breedings).then(() => { alert('Catatan IB berhasil disimpan!'); document.getElementById('breedBull').value = ''; setDefaultDates(); });
     }
     function deleteBreeding(id) { breedings = breedings.filter(i => i.id !== id); db.ref('farm_breeding').set(breedings); }
     function renderBreeding() {
         let tbody = document.getElementById('breedTableBody'); tbody.innerHTML = '';
         if(!breedings.length) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada data Inseminasi Buatan.</td></tr>`;
-        breedings.forEach(i => { tbody.innerHTML += `<tr><td><b>${i.tag}</b></td><td>${i.bull}</td><td>${i.date}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.hpl}</b></td><td><button class="btn-danger" onclick="deleteBreeding(${i.id})">Hapus</button></td></tr>`; });
+        breedings.forEach(i => { 
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteBreeding(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td><b>${i.tag}</b></td><td>${i.bull}</td><td>${i.date}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.hpl}</b></td><td>${actBtn}</td></tr>`; 
+        });
     }
 
+    // KESEHATAN
     function saveHealth(e) {
         e.preventDefault();
         healths.push({ id: Date.now(), tag: document.getElementById('healthTagSelect').value, desc: document.getElementById('healthDesc').value.trim(), date: document.getElementById('healthDate').value });
@@ -1106,9 +1207,13 @@
     function renderHealth() {
         let tbody = document.getElementById('healthTableBody'); tbody.innerHTML = '';
         if(!healths.length) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada rekam medis.</td></tr>`;
-        healths.forEach(i => { tbody.innerHTML += `<tr><td>${i.date}</td><td><b>${i.tag}</b></td><td>${i.desc}</td><td><button class="btn-danger" onclick="deleteHealth(${i.id})">Hapus</button></td></tr>`; });
+        healths.forEach(i => { 
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteHealth(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td>${i.date}</td><td><b>${i.tag}</b></td><td>${i.desc}</td><td>${actBtn}</td></tr>`; 
+        });
     }
 
+    // SUSU
     function saveMilk(e) {
         e.preventDefault();
         let tag = milkInputMode === 'individual' ? document.getElementById('milkTagSelect').value : 'TOTAL TANGKI (BULK)';
@@ -1124,12 +1229,13 @@
         milks.forEach(i => {
             if(i.date === todayStr) totalToday += i.volume;
             let tagDisplay = (i.tag && i.tag !== 'TOTAL TANGKI (BULK)') ? `<b style="color:#1976d2;">${i.tag}</b>` : `<span class="badge badge-warning">BULK TANGKI</span>`;
-            tbody.innerHTML += `<tr><td>${i.date}</td><td>${tagDisplay}</td><td>${i.session}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.volume} L</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td>${i.date}</td><td>${tagDisplay}</td><td>${i.session}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.volume} L</b></td><td>${actBtn}</td></tr>`;
         });
         document.getElementById('statMilkToday').innerText = totalToday.toFixed(1) + ' Liter';
     }
 
-    // SATUAN PAKAN & KOMPOS -> MURNI KILOGRAM (KG)
+    // PAKAN & KOMPOS
     function saveFeed(e) {
         e.preventDefault();
         feeds.push({ id: Date.now(), name: document.getElementById('feedName').value.trim(), qty: parseFloat(document.getElementById('feedQty').value), min: parseFloat(document.getElementById('feedMin').value) });
@@ -1141,7 +1247,8 @@
         if(!feeds.length) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada stok pakan tersimpan.</td></tr>`;
         feeds.forEach(i => {
             let statusBadge = (parseFloat(i.qty) <= parseFloat(i.min)) ? `<span class="badge badge-danger">Kritis</span>` : `<span class="badge badge-success">Aman</span>`;
-            tbody.innerHTML += `<tr><td><b>${i.name}</b></td><td><b style="color:#1976d2;">${i.qty} Kg</b></td><td>${i.min} Kg</td><td>${statusBadge}</td><td><button class="btn-danger" onclick="deleteFeed(${i.id})">Hapus</button></td></tr>`;
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteFeed(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td><b>${i.name}</b></td><td><b style="color:#1976d2;">${i.qty} Kg</b></td><td>${i.min} Kg</td><td>${statusBadge}</td><td>${actBtn}</td></tr>`;
         });
     }
 
@@ -1154,8 +1261,10 @@
     function renderCompost() {
         let tbody = document.getElementById('compostTableBody'); tbody.innerHTML = '';
         if(!composts.length) tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada catatan pengolahan kompos.</td></tr>`;
-        composts.forEach(i => { tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.status}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.qty} Kg</b></td><td><button class="btn-danger" onclick="deleteCompost(${i.id})">Hapus</button></td></tr>`; });
-        
+        composts.forEach(i => { 
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteCompost(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.status}</td><td><b style="color:#2e7d32; font-size:1.05rem;">${i.qty} Kg</b></td><td>${actBtn}</td></tr>`; 
+        });
         let lastCompost = composts.length ? composts[composts.length - 1].qty : 0;
         document.getElementById('statCompostStock').innerText = lastCompost + ' Kg';
     }
@@ -1174,6 +1283,7 @@
                             </div>`;
     }
 
+    // BCS
     function saveBCS(e) {
         e.preventDefault();
         bcss.push({ id: Date.now(), tag: document.getElementById('bcsTagSelect').value, score: document.getElementById('bcsScore').value, date: document.getElementById('bcsDate').value });
@@ -1183,17 +1293,18 @@
     function renderBCS() {
         let tbody = document.getElementById('bcsTableBody'); tbody.innerHTML = '';
         if(!bcss.length) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada riwayat BCS.</td></tr>`;
-        bcss.forEach(i => { tbody.innerHTML += `<tr><td>${i.date}</td><td><b>${i.tag}</b></td><td><b style="color:#f57c00; font-size:1.1rem;">Skor ${i.score}</b></td><td>${parseFloat(i.score)<2.5?'<span class="badge badge-danger">Kurus</span>':'<span class="badge badge-success">Ideal/Standar</span>'}</td><td><button class="btn-danger" onclick="deleteBCS(${i.id})">Hapus</button></td></tr>`; });
+        bcss.forEach(i => { 
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteBCS(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td>${i.date}</td><td><b>${i.tag}</b></td><td><b style="color:#f57c00; font-size:1.1rem;">Skor ${i.score}</b></td><td>${parseFloat(i.score)<2.5?'<span class="badge badge-danger">Kurus</span>':'<span class="badge badge-success">Ideal/Standar</span>'}</td><td>${actBtn}</td></tr>`; 
+        });
     }
 
+    // KEUANGAN & ANALISIS
     function updateAnalysis() {
         let totalMilkAll = milks.reduce((acc, curr) => acc + curr.volume, 0);
         let totalFeedExpense = finances.filter(f => f.type === 'Pengeluaran' && f.desc.toLowerCase().includes('pakan')).reduce((acc, curr) => acc + curr.nominal, 0);
         document.getElementById('analysisTotalMilk').innerText = totalMilkAll.toFixed(1) + ' Liter';
         document.getElementById('analysisTotalFeedCost').innerText = formatRp(totalFeedExpense);
-        
-        // Asumsi rata-rata harga konsentrat farm adalah Rp 5.000 / Kg. 
-        // Silakan disesuaikan dengan harga riil kandang pada rumus (totalFeedExpense / 5000)
         let ratio = totalFeedExpense > 0 ? (totalMilkAll / (totalFeedExpense / 5000)).toFixed(2) : '0.00';
         document.getElementById('analysisEfficiencyRatio').innerText = ratio + ' Liter / Kg Pakan';
     }
@@ -1212,7 +1323,8 @@
         let totalIncome = 0, totalExpense = 0;
         finances.forEach(i => {
             if(i.type === 'Pemasukan') totalIncome += i.nominal; else totalExpense += i.nominal;
-            tbody.innerHTML += `<tr><td><b>${i.type}</b></td><td>${i.desc}</td><td style="color:${i.type==='Pemasukan'?'#2e7d32':'#c62828'}; font-weight:bold; font-size:1.05rem;">${formatRp(i.nominal)}</td><td><button class="btn-danger" onclick="deleteFinance(${i.id})">Hapus</button></td></tr>`;
+            let actBtn = currentUserRole === 'admin' ? `<button class="btn-danger" onclick="deleteFinance(${i.id})">Hapus</button>` : '-';
+            tbody.innerHTML += `<tr><td><b>${i.type}</b></td><td>${i.desc}</td><td style="color:${i.type==='Pemasukan'?'#2e7d32':'#c62828'}; font-weight:bold; font-size:1.05rem;">${formatRp(i.nominal)}</td><td>${actBtn}</td></tr>`;
         });
         let net = totalIncome - totalExpense;
         document.getElementById('summaryIncome').innerText = formatRp(totalIncome);
@@ -1221,22 +1333,86 @@
         document.getElementById('statNetProfit').innerText = formatRp(net);
     }
 
+    // CRM / PIUTANG
+    function saveCRM(e) {
+        e.preventDefault();
+        let rawVal = document.getElementById('crmNominal').value.replace(/\D/g, "");
+        if (!rawVal) return;
+        crms.push({
+            id: Date.now(),
+            date: document.getElementById('crmDate').value,
+            customer: document.getElementById('crmCustomer').value.trim(),
+            product: document.getElementById('crmProduct').value,
+            amount: parseFloat(rawVal),
+            status: document.getElementById('crmStatus').value
+        });
+        db.ref('farm_crm').set(crms).then(() => { 
+            alert('Tagihan CRM disimpan!'); 
+            document.getElementById('crmCustomer').value = ''; 
+            document.getElementById('crmNominal').value = ''; 
+        });
+    }
+
+    function markAsPaid(id) {
+        let item = crms.find(i => i.id === id);
+        if (item && item.status === 'Piutang') {
+            item.status = 'Lunas';
+            db.ref('farm_crm').set(crms);
+            
+            if (confirm('Tagihan telah Lunas! Apakah Anda ingin mencatatnya otomatis ke dalam Pemasukan Kas Farm?')) {
+                finances.push({ 
+                    id: Date.now(), 
+                    type: 'Pemasukan', 
+                    desc: `Pelunasan Piutang - ${item.customer} (${item.product})`, 
+                    nominal: item.amount 
+                });
+                db.ref('farm_finance').set(finances);
+                alert('Tercatat otomatis di Laba Rugi Farm!');
+            }
+        }
+    }
+    
+    function deleteCRM(id) { if(confirm('Hapus histori penjualan ini?')) { crms = crms.filter(i => i.id !== id); db.ref('farm_crm').set(crms); } }
+    
+    function renderCRM() {
+        let tbody = document.getElementById('crmTableBody'); tbody.innerHTML = '';
+        if(!crms.length) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada riwayat penjualan CRM.</td></tr>`;
+        
+        crms.forEach(i => {
+            let statusHtml = i.status === 'Lunas' ? `<span class="badge badge-success">Lunas</span>` : `<span class="badge badge-warning" style="background:#e65100;">Piutang</span>`;
+            let actionHtml = '';
+            
+            if (currentUserRole === 'admin') {
+                if (i.status === 'Piutang') {
+                    actionHtml = `<button class="btn-success" onclick="markAsPaid(${i.id})" style="margin-right:5px;">Lunas ✓</button>`;
+                }
+                actionHtml += `<button class="btn-danger" onclick="deleteCRM(${i.id})">Hapus</button>`;
+            } else { actionHtml = '-'; }
+
+            tbody.innerHTML += `<tr>
+                <td>${i.date}</td>
+                <td><b>${i.customer}</b></td>
+                <td>${i.product}</td>
+                <td style="color:#1b5e20; font-weight:bold;">${formatRp(i.amount)}</td>
+                <td>${statusHtml}</td>
+                <td>${actionHtml}</td>
+            </tr>`;
+        });
+    }
+
+    // EXPORTS
     function exportToPDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        doc.setFontSize(18);
-        doc.setTextColor(46, 125, 50); // Dark Green
+        doc.setFontSize(18); doc.setTextColor(46, 125, 50);
         doc.text("LAPORAN REKAPITULASI OPERASIONAL AWW FARM", 15, 20);
         
-        doc.setFontSize(10);
-        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(10); doc.setTextColor(100, 100, 100);
         doc.text("Tanggal Cetak Dokumen: " + new Date().toLocaleDateString('id-ID'), 15, 28);
-        doc.setLineWidth(0.5);
-        doc.line(15, 32, 195, 32);
+        doc.setLineWidth(0.5); doc.line(15, 32, 195, 32);
 
-        doc.setFontSize(14);
-        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14); doc.setTextColor(0, 0, 0);
         doc.text("1. RINGKASAN POPULASI TERNAK", 15, 45);
         
         let activeLactating = 0, activePregnant = 0;
@@ -1263,8 +1439,7 @@
         doc.text(`- Total Pemasukan Kandang: ${formatRp(totalIn)}`, 20, 102);
         doc.text(`- Total Pengeluaran Operasional: ${formatRp(totalOut)}`, 20, 109);
         
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12); doc.setFont("helvetica", "bold");
         doc.text(`- SALDO KAS BERSIH (Laba/Rugi): ${formatRp(totalIn - totalOut)}`, 20, 118);
         
         doc.save("Laporan_Rekapitulasi_AWW_FARM.pdf");
@@ -1275,15 +1450,18 @@
         
         const wsCows = XLSX.utils.json_to_sheet(cows.map(c => {
             let info = getDynamicCowInfo(c);
-            return { EarTag_Sapi: c.tag, Status_Terkini: info.currentStatus, Umur_Aktual_Bulan: info.currentAge };
+            return { EarTag_Sapi: c.tag, Status_Terkini: info.currentStatus, Umur_Bulan: info.currentAge, Bapak: c.sire||'-', Ibu: c.dam||'-' };
         }));
         XLSX.utils.book_append_sheet(wb, wsCows, "Data_Populasi_Sapi");
         
-        const wsMilk = XLSX.utils.json_to_sheet(milks.map(m=>({Tanggal: m.date, EarTag_Sapi: m.tag, Sesi_Perah: m.session, Volume_Liter: m.volume})));
+        const wsMilk = XLSX.utils.json_to_sheet(milks.map(m=>({Tanggal: m.date, EarTag_Sapi: m.tag, Sesi: m.session, Volume_Liter: m.volume})));
         XLSX.utils.book_append_sheet(wb, wsMilk, "Data_Produksi_Susu");
         
-        const wsFin = XLSX.utils.json_to_sheet(finances.map(f=>({Jenis_Arus_Kas: f.type, Keterangan_Transaksi: f.desc, Nominal_Rupiah: f.nominal})));
+        const wsFin = XLSX.utils.json_to_sheet(finances.map(f=>({Jenis_Arus_Kas: f.type, Keterangan: f.desc, Nominal_Rupiah: f.nominal})));
         XLSX.utils.book_append_sheet(wb, wsFin, "Data_Laba_Rugi_Keuangan");
+
+        const wsCrm = XLSX.utils.json_to_sheet(crms.map(c=>({Tanggal: c.date, Pelanggan: c.customer, Produk: c.product, Status: c.status, Total_Rp: c.amount})));
+        XLSX.utils.book_append_sheet(wb, wsCrm, "Data_CRM_Piutang");
         
         XLSX.writeFile(wb, "Database_Lengkap_AWW_FARM.xlsx");
     }
