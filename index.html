@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Peternakan Sapi Perah FH & Kompos Pro (Barcode Scanner)</title>
-    <meta name="app-version" content="2.3.0-dairy-farm-unified-rbac">
+    <meta name="app-version" content="2.3.1-dairy-farm-unified-rbac">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -117,7 +117,7 @@
     
     <div style="background:#f3e5f5; padding:12px; border-radius:6px; margin-bottom:20px; font-size:0.8rem; color:#4a148c; text-align:left; border-left: 4px solid #7b1fa2;">
         <b>💡 Sistem Keamanan & Akses:</b><br>
-        - <b>Owner:</b> wildansambi02@gmail.com (Hak Mutlak).<br>
+        - <b>Owner:</b> wildansambi69@gmail.com (Hak Mutlak).<br>
         - <b>Admin / Anak Kandang:</b> Diatur & ditunjuk langsung oleh Owner di dalam aplikasi.<br>
         - Email baru yg belum didaftarkan Owner otomatis hanya menjadi Anak Kandang.
     </div>
@@ -251,7 +251,6 @@
             </select>
         </div>
 
-        <!-- SUB-MODUL 1 - 11 TETAP SAMA (Hanya mengubah logika hapus tombol berdasar role) -->
         <!-- SUB-MODUL 1: DATA TERNAK -->
         <div class="sub-module-section active" id="sub_cows">
             <div class="card">
@@ -492,7 +491,7 @@
     </div>
 </div>
 
-<!-- POPUP & MODALS SAMA SEPERTI SEBELUMNYA -->
+<!-- POPUP & MODALS -->
 <div class="modal" id="drugAlertModal"><div class="modal-content" style="background:#ffebee; border:4px solid #c62828; text-align:center;"><h2 style="color:#c62828;">🛑 PERINGATAN KRITIS!</h2><div id="drugAlertContent" style="color:#b71c1c; font-weight:bold; margin-bottom:20px;"></div><button class="btn-danger" style="padding:15px; width:100%; font-weight: bold;" onclick="closeDrugAlertModal()">SAYA MENGERTI</button></div></div>
 <div class="modal" id="cowInfoModal"><div class="modal-content"><div id="cowInfoModalBody"></div><button class="btn-secondary" onclick="closeCowInfoModal()" style="width:100%; margin-top:20px; padding: 12px;">Tutup Window</button></div></div>
 <div class="modal" id="linkModal"><div class="modal-content" style="text-align: center;"><h3 style="color: #1976d2;">🔗 Tautan Akses & QR</h3><input type="text" id="appUrlInput" readonly style="font-size: 0.95rem; text-align: center; margin-bottom: 20px; width:100%;"><div id="qrcodeContainer" style="display: flex; justify-content: center; margin-bottom: 20px;"></div><button class="btn-danger" onclick="document.getElementById('linkModal').style.display='none'" style="width:100%;">Tutup</button></div></div>
@@ -540,7 +539,7 @@
             loggedInEmail = user.email.toLowerCase();
             
             // 1. Cek langsung jika email adalah Super Owner
-            if (loggedInEmail === 'wildansambi02@gmail.com') {
+            if (loggedInEmail === 'wildansambi69@gmail.com') {
                 currentUserRole = 'owner';
                 applyRoleRestrictions();
             } else {
@@ -569,7 +568,6 @@
         const isOwner = currentUserRole === 'owner';
         const isAdmin = currentUserRole === 'admin';
         const isPekerja = currentUserRole === 'pekerja';
-        const isPrivileged = isOwner || isAdmin;
         
         // 1. Badge Status
         const roleBadge = document.getElementById('userRoleBadge');
@@ -608,7 +606,7 @@
             userRoles = snap.val() || []; 
             renderUserRoles(); 
             // Evaluasi ulang role jika bukan owner
-            if (loggedInEmail && loggedInEmail !== 'wildansambi02@gmail.com') {
+            if (loggedInEmail && loggedInEmail !== 'wildansambi69@gmail.com') {
                 const found = userRoles.find(r => r.email === loggedInEmail);
                 currentUserRole = found ? found.role : 'pekerja';
                 applyRoleRestrictions();
@@ -634,7 +632,7 @@
         const emailInput = document.getElementById('roleEmail').value.toLowerCase().trim();
         const roleInput = document.getElementById('roleSelect').value;
         
-        if (emailInput === 'wildansambi02@gmail.com') return alert('Email ini adalah Super Owner permanen dan tidak perlu didaftarkan.');
+        if (emailInput === 'wildansambi69@gmail.com') return alert('Email ini adalah Super Owner permanen dan tidak perlu didaftarkan.');
         
         const existingIdx = userRoles.findIndex(r => r.email === emailInput);
         if (existingIdx >= 0) {
@@ -694,8 +692,6 @@
         });
     }
 
-    // (SEMUA LOGIKA ALERT DAN SIMPAN SAMA SEPERTI VERSI 2.2.0, NAMUN PENGECEKAN HAPUS DIUBAH KE isPrivileged)
-    // Sapi
     function saveCow(e) {
         e.preventDefault();
         cows.push({ id: Date.now(), tag: document.getElementById('cowTag').value.trim(), status: document.getElementById('cowStatus').value, age: document.getElementById('cowAge').value, initialAge: parseInt(document.getElementById('cowAge').value), regDate: Date.now(), sire: document.getElementById('cowSire').value.trim(), dam: document.getElementById('cowDam').value.trim() });
@@ -715,13 +711,11 @@
         document.getElementById('statTotalCows').innerText = cows.length + ' Ekor'; document.getElementById('statLactating').innerText = totalLactating + ' Ekor'; document.getElementById('statPregnantCows').innerText = totalPregnant + ' Ekor';
     }
 
-    // Susu
     function switchMilkMode(mode) { milkInputMode = mode; const bInd = document.getElementById('btnModeIndividual'), bBulk = document.getElementById('btnModeBulk'), gt = document.getElementById('groupMilkTag'); if (mode === 'individual') { bInd.className = 'mode-btn active'; bBulk.className = 'mode-btn'; gt.style.display = 'block'; document.getElementById('milkTagSelect').setAttribute('required', 'true'); } else { bBulk.className = 'mode-btn active'; bInd.className = 'mode-btn'; gt.style.display = 'none'; document.getElementById('milkTagSelect').removeAttribute('required'); } }
     function saveMilk(e) { e.preventDefault(); let tag = milkInputMode === 'individual' ? document.getElementById('milkTagSelect').value : 'BULK'; milks.push({ id: Date.now(), mode: milkInputMode, tag: tag, date: document.getElementById('milkDate').value, session: document.getElementById('milkSession').value, volume: parseFloat(document.getElementById('milkVolume').value) }); db.ref('farm_milk').set(milks).then(() => { alert('Dicatat!'); document.getElementById('milkVolume').value = ''; }); }
     function deleteMilk(id) { if(['owner', 'admin'].includes(currentUserRole)) { milks = milks.filter(i => i.id !== id); db.ref('farm_milk').set(milks); } }
     function renderMilk() { let tbody = document.getElementById('milkTableBody'); tbody.innerHTML = ''; let tt = 0, todayStr = new Date().toISOString().slice(0, 10); milks.forEach(i => { if(i.date === todayStr) tt += i.volume; let actBtn = ['owner', 'admin'].includes(currentUserRole) ? `<button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button>` : '-'; tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.tag}</td><td>${i.session}</td><td>${i.volume} L</td><td>${actBtn}</td></tr>`; }); document.getElementById('statMilkToday').innerText = tt.toFixed(1) + ' Liter'; }
 
-    // Breeding, Health, Feed, Compost, BCS (Sama persis logikanya)
     function saveBreeding(e) { e.preventDefault(); let tag = document.getElementById('breedTagSelect').value, bullInput = document.getElementById('breedBull').value.trim(); let targetCow = cows.find(c => c.tag === tag); if (targetCow && targetCow.sire && targetCow.sire.toLowerCase() === bullInput.toLowerCase()) { alert("⚠️ WARNING INBREEDING! DIBATALKAN."); return; } let bDate = new Date(document.getElementById('breedDate').value); let hplDate = new Date(bDate); hplDate.setDate(hplDate.getDate() + 280); breedings.push({ id: Date.now(), tag: tag, bull: bullInput, date: document.getElementById('breedDate').value, hpl: hplDate.toISOString().slice(0, 10) }); db.ref('farm_breeding').set(breedings).then(() => { alert('Tersimpan!'); document.getElementById('breedBull').value = ''; setDefaultDates(); }); }
     function deleteBreeding(id) { if(['owner', 'admin'].includes(currentUserRole)) { breedings = breedings.filter(i => i.id !== id); db.ref('farm_breeding').set(breedings); } }
     function renderBreeding() { let tbody = document.getElementById('breedTableBody'); tbody.innerHTML = ''; breedings.forEach(i => { let actBtn = ['owner', 'admin'].includes(currentUserRole) ? `<button class="btn-danger" onclick="deleteBreeding(${i.id})">Hapus</button>` : '-'; tbody.innerHTML += `<tr><td>${i.tag}</td><td>${i.bull}</td><td>${i.date}</td><td>${i.hpl}</td><td>${actBtn}</td></tr>`; }); }
@@ -742,7 +736,6 @@
     function deleteBCS(id) { if(['owner', 'admin'].includes(currentUserRole)) { bcss = bcss.filter(i => i.id !== id); db.ref('farm_bcs').set(bcss); } }
     function renderBCS() { let tbody = document.getElementById('bcsTableBody'); tbody.innerHTML = ''; bcss.forEach(i => { let actBtn = ['owner', 'admin'].includes(currentUserRole) ? `<button class="btn-danger" onclick="deleteBCS(${i.id})">Hapus</button>` : '-'; tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.tag}</td><td>${i.score}</td><td>${parseFloat(i.score)<2.5?'Kurus':'Ideal'}</td><td>${actBtn}</td></tr>`; }); }
 
-    // Admin & Owner Only Functions
     function formatNominalInput(input) { let val = input.value.replace(/\D/g, ""); input.value = val ? new Intl.NumberFormat('id-ID').format(parseInt(val, 10)) : ""; }
     function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
     
@@ -772,7 +765,6 @@
         document.getElementById('dashboardAlertsContainer').innerHTML = alertsHTML;
     }
 
-    // Scanners
     function openScanner(target=null){activeTargetInputId=target;activeTargetSelectId=null;document.getElementById('scannerModal').style.display='flex';if(!html5QrCode)html5QrCode=new Html5Qrcode("reader");html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:250,height:150}},onScanSuccess,()=>{}).catch(e=>{alert(e);closeScanner();});}
     function openScannerForSelect(target,focus=false){activeTargetSelectId=target;activeTargetInputId=null;autoFocusVolume=focus;document.getElementById('scannerModal').style.display='flex';if(!html5QrCode)html5QrCode=new Html5Qrcode("reader");html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:250,height:150}},onScanSuccess,()=>{}).catch(e=>{alert(e);closeScanner();});}
     function closeScanner(){if(html5QrCode&&html5QrCode.isScanning){html5QrCode.stop().then(()=>document.getElementById('scannerModal').style.display='none');}else{document.getElementById('scannerModal').style.display='none';}}
