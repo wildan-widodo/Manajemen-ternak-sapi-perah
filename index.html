@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo Lengkap - AWW Farm Sapi Perah Pro v6</title>
-    <meta name="app-version" content="2.7.0-demo-mode-pro">
-    
+    <title>AWW Farm Sapi Perah - Sistem Manajemen Kandang Pro v6.0</title>
+    <meta name="app-version" content="6.0.0-production-rtdb">
+
+    <!-- Firebase SDK v10 Compat (Auth & Realtime Database) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <!-- QR Code Generator & Camera Scanner -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
@@ -13,13 +19,18 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #f4f7f6; margin: 0; padding: 15px; color: #333; }
         .container { max-width: 1280px; margin: auto; display: none; }
-        .login-container { max-width: 400px; margin: 80px auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; }
-        
+
+        /* Login Screen */
+        .login-container { max-width: 430px; margin: 60px auto; background: white; padding: 32px; border-radius: 14px; box-shadow: 0 10px 28px rgba(0,0,0,0.1); text-align: center; border-top: 6px solid #2e7d32; }
+        .login-logo { font-size: 3rem; margin-bottom: 8px; }
+        .config-box { margin-top: 20px; text-align: left; background: #f8faf9; border: 1px solid #d5e5d8; border-radius: 8px; padding: 12px; font-size: 0.85rem; }
+        .config-box summary { cursor: pointer; font-weight: bold; color: #1b5e20; }
+
         .card { background: white; padding: 22px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         h2, h3, h4 { margin-top: 0; color: #2e7d32; }
-        
+
         .main-nav { display: flex; gap: 12px; margin-bottom: 25px; background: #fff; padding: 12px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); flex-wrap: wrap; align-items: center; }
-        .main-nav-btn { flex: 1; background: #f0f2f5; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #555; font-size: 0.95rem; text-align: center; min-width: 180px; transition: all 0.3s ease; position: relative; }
+        .main-nav-btn { flex: 1; background: #f0f2f5; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #555; font-size: 0.95rem; text-align: center; min-width: 180px; transition: all 0.3s ease; }
         .main-nav-btn:hover { background: #e4e6e9; }
         .main-nav-btn.active { background: #2e7d32; color: white; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
 
@@ -56,7 +67,7 @@
         label { display: block; margin-bottom: 6px; color: #444; font-weight: bold; font-size: 0.9rem; }
         input, select, textarea { width: 100%; padding: 11px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.95rem; background: #fff; transition: border 0.2s; }
         input:focus, select:focus { border-color: #2e7d32; outline: none; }
-        
+
         .btn-primary { background: #2e7d32; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; font-size: 1rem; transition: background 0.2s; }
         .btn-primary:hover { background: #1b5e20; }
         .btn-danger { background: #c62828; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: bold; }
@@ -65,6 +76,8 @@
         .btn-success:hover { background: #1b5e20; }
         .btn-step { background: #1565c0; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: bold; }
         .btn-step:hover { background: #0d47a1; }
+        .btn-qr { background: #455a64; color: white; border: none; padding: 6px 11px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: bold; }
+        .btn-qr:hover { background: #263238; }
 
         /* Mode Toggle Interaktif Susu */
         .mode-toggle { display: flex; gap: 10px; margin-bottom: 20px; background: #eceff1; padding: 6px; border-radius: 10px; }
@@ -81,21 +94,20 @@
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: middle; }
         th { background: #f8f9fa; color: #333; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
         tr:hover td { filter: brightness(0.98); }
-        
+
         .badge { padding: 5px 11px; border-radius: 20px; font-size: 0.78rem; font-weight: bold; color: white; display: inline-flex; align-items: center; gap: 5px; letter-spacing: 0.3px; }
         .badge-success { background: #2e7d32; }
         .badge-warning { background: #ef6c00; }
         .badge-danger { background: #c62828; }
         .badge-primary { background: #1565c0; }
         .badge-teal { background: #00838f; }
-        .badge-brown { background: #6d4c41; }
         .badge-owner { background: #4a148c; }
 
         /* Badge Status Produk & Pembayaran CRM */
         .badge-prod-susu { background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
         .badge-prod-kompos { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
         .badge-prod-sapi { background: #efebe9; color: #4e342e; border: 1px solid #bcaaa4; }
-        
+
         .badge-ship-done { background: #e0f2f1; color: #00695c; border: 1px solid #80cbc4; }
         .badge-ship-ready { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
         .badge-ship-transit { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
@@ -129,27 +141,63 @@
         .badge-stok-aman { background: #2e7d32; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
         .badge-stok-kritis { background: #c62828; color: white; padding: 6px 12px; border-radius: 20px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; animation: pulseRed 1.5s infinite; }
         @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* Modal QR */
+        .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 15px; }
+        .modal-box { background: white; padding: 24px; border-radius: 12px; max-width: 360px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
     </style>
 </head>
 <body>
 
+<!-- HALAMAN LOGIN PRODUKSI (FIREBASE AUTH) -->
 <div class="login-container" id="loginCard">
-    <h2 style="margin-bottom: 5px;">AWW FARM (Pro v6)</h2>
-    <p style="font-size: 0.9rem; color: #777; margin-bottom: 25px;">Memuat sistem manajemen kandang...</p>
-    <div style="background:#e8f5e9; padding:15px; border-radius:6px; font-weight:bold; color:#2e7d32;">
-        ⚙️ Menyiapkan Modul Terpadu...
-    </div>
+    <div class="login-logo">🐄</div>
+    <h2 style="margin-bottom: 4px;">AWW FARM SAPI PERAH</h2>
+    <p style="font-size: 0.9rem; color: #666; margin-bottom: 22px;">Sistem Manajemen Kandang Terpadu (v6.0 Live)</p>
+
+    <form onsubmit="loginUser(event)">
+        <div class="form-group">
+            <label>Email Akun Kandang</label>
+            <input type="email" id="loginEmail" placeholder="contoh: owner@awwfarm.com" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="Masukkan password..." required>
+        </div>
+        <button type="submit" class="btn-primary" id="btnLoginSubmit">🔐 Masuk ke Sistem Kandang</button>
+    </form>
+
+    <div id="loginErrorMsg" style="display:none; margin-top:12px; background:#ffebee; color:#c62828; padding:10px; border-radius:6px; font-size:0.85rem; font-weight:bold;"></div>
+
+    <details class="config-box" id="firebaseSetupDetails">
+        <summary>⚙️ Pengaturan Koneksi Firebase (Jika Belum Tersambung)</summary>
+        <p style="color:#555; margin:8px 0;">Tempel objek <code>firebaseConfig</code> dari Firebase Console Anda (atau isi API Key) agar tersimpan aman di browser ini:</p>
+        <div class="form-group" style="margin-bottom:8px;">
+            <label style="font-size:0.8rem;">Firebase API Key</label>
+            <input type="text" id="cfgApiKey" placeholder="AIzaSy..." style="padding:8px; font-size:0.85rem;">
+        </div>
+        <div class="form-group" style="margin-bottom:8px;">
+            <label style="font-size:0.8rem;">Database URL (Realtime Database)</label>
+            <input type="text" id="cfgDbUrl" value="https://managemen-ternak-sapi-perah-default-rtdb.firebaseio.com" style="padding:8px; font-size:0.85rem;">
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:0.8rem;">Project ID</label>
+            <input type="text" id="cfgProjectId" value="managemen-ternak-sapi-perah" style="padding:8px; font-size:0.85rem;">
+        </div>
+        <button type="button" class="btn-step" onclick="saveFirebaseConfigLocal()" style="width:100%; padding:9px;">💾 Simpan & Hubungkan Firebase</button>
+    </details>
 </div>
 
+<!-- APLIKASI UTAMA -->
 <div class="container" id="appContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0;">
         <h2 style="margin: 0; color: #1b5e20; display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.8rem;">🐄</span> Smart Farm Sapi Perah FH Pro v6
+            <span style="font-size: 1.8rem;">🐄</span> AWW Farm Sapi Perah FH (Pro v6)
         </h2>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <span class="badge badge-success" style="font-size: 0.85rem; padding: 6px 12px;">MODE INTERAKTIF FULL</span>
-            <span id="userRoleBadge" class="badge badge-owner" style="font-size: 0.85rem; padding: 6px 12px; margin-right: 10px;">Role: Super Owner</span>
-            <button class="btn-danger" onclick="window.location.reload()" style="width: auto; padding: 8px 16px; border-radius: 6px;">🔄 Muat Ulang</button>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <span class="badge badge-success" id="dbConnectionBadge" style="font-size: 0.82rem; padding: 6px 12px;">🟢 LIVE CLOUD SYNC</span>
+            <span id="userRoleBadge" class="badge badge-owner" style="font-size: 0.82rem; padding: 6px 12px;">Role: Memuat...</span>
+            <button class="btn-danger" onclick="logoutUser()" style="width: auto; padding: 8px 14px; border-radius: 6px;">🚪 Keluar</button>
         </div>
     </div>
 
@@ -164,7 +212,7 @@
         <div class="card" style="border-left: 6px solid #1976d2; background: #f0f7ff; padding: 20px;">
             <h3 style="color:#0d47a1; margin-bottom:12px; display: flex; align-items: center; gap: 8px;">🔔 Alert Kandang Hari Ini</h3>
             <div id="dashboardAlertsContainer">
-                <p style="color:#666; font-size:0.95rem; margin:0;">Memeriksa status operasional...</p>
+                <p style="color:#666; font-size:0.95rem; margin:0;">Menyinkronkan data dari Firebase...</p>
             </div>
         </div>
 
@@ -177,7 +225,7 @@
                 <div class="val" id="statTotalCows">0 Ekor</div>
                 <div class="stat-action">Kelola Data Ternak ➔</div>
             </div>
-            
+
             <div class="stat-card card-blue" onclick="jumpToModule('cows')">
                 <div class="stat-header">
                     <h4 class="stat-title">Sapi Laktasi Aktif</h4>
@@ -186,7 +234,7 @@
                 <div class="val" id="statLactating">0 Ekor</div>
                 <div class="stat-action">Lihat Daftar ➔</div>
             </div>
-            
+
             <div class="stat-card card-teal" onclick="jumpToModule('milk')">
                 <div class="stat-header">
                     <h4 class="stat-title">Produksi Susu (Hari Ini)</h4>
@@ -195,7 +243,7 @@
                 <div class="val" id="statMilkToday">0 Liter</div>
                 <div class="stat-action">Catat Pemerahan ➔</div>
             </div>
-            
+
             <div class="stat-card card-orange" onclick="jumpToModule('compost')">
                 <div class="stat-header">
                     <h4 class="stat-title">Kompos Matang & Kemas</h4>
@@ -204,7 +252,7 @@
                 <div class="val" id="statCompostStock">0 Kg</div>
                 <div class="stat-action">Pantau Pengolahan ➔</div>
             </div>
-            
+
             <div class="stat-card card-purple" onclick="jumpToModule('health')">
                 <div class="stat-header">
                     <h4 class="stat-title">Sapi Bunting (Masa IB)</h4>
@@ -213,7 +261,7 @@
                 <div class="val" id="statPregnantCows">0 Ekor</div>
                 <div class="stat-action">Cek Estimasi HPL ➔</div>
             </div>
-            
+
             <div class="stat-card card-orange" id="cardFinance" style="background: linear-gradient(135deg, #ffffff 0%, #fff3e0 100%); border-left-color: #e65100;" onclick="jumpToModule('finance')">
                 <div class="stat-header">
                     <h4 class="stat-title">Saldo Kas Berjalan</h4>
@@ -236,30 +284,36 @@
                 <option value="feed">🌾 4. Manajemen Stok Pakan & Hijauan (HMT)</option>
                 <option value="compost">🌱 5. Pengolahan Limbah Kompos Kandang</option>
                 <option value="analysis">📉 6. Analisis Efisiensi Pakan vs Hasil Susu (Real-Time)</option>
-                <option value="finance">💰 7. Keuangan & Laba/Rugi Farm (Beda UI Masuk/Keluar)</option>
-                <option value="crm">🤝 8. Database Pelanggan & Tagihan (CRM)</option>
-                <option value="export">📑 9. Ekspor Laporan (PDF & Excel)</option>
-                <option value="users">🔐 10. Manajemen Akses & Akun (Khusus Owner)</option>
+                <option value="finance" class="restricted-opt">💰 7. Keuangan & Laba/Rugi Farm</option>
+                <option value="crm" class="restricted-opt">🤝 8. Database Pelanggan & Tagihan (CRM)</option>
+                <option value="export" class="restricted-opt">📑 9. Ekspor Laporan (PDF & Excel)</option>
+                <option value="users" class="owner-only-opt">🔐 10. Manajemen Akses & Akun (Khusus Owner)</option>
             </select>
         </div>
 
         <!-- SUB-MODUL 1: DATA TERNAK -->
         <div class="sub-module-section active" id="sub_cows">
             <div class="card">
-                <h3>Tambah Data Sapi Baru & Silsilah Pedigree</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                    <h3 style="margin:0;">Tambah Data Sapi Baru & Silsilah Pedigree</h3>
+                    <button type="button" class="btn-qr" onclick="openQrScanner('cowSearch')" style="padding:8px 14px;">📷 Scan QR EarTag</button>
+                </div>
                 <form onsubmit="saveCow(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div class="form-group"><label>Nomor / Nama EarTag Sapi</label><input type="text" id="cowTag" placeholder="Contoh: SAPI-A06" required></div>
+                        <div class="form-group"><label>Nomor / Nama EarTag Sapi</label><input type="text" id="cowTag" placeholder="Contoh: FH-001" required></div>
                         <div class="form-group"><label>Kategori Awal Pendaftaran</label><select id="cowStatus" required><option value="Laktasi">Laktasi</option><option value="Kering Kandang">Kering Kandang</option><option value="Bunting">Bunting</option><option value="Dara / Calon Indukan">Dara / Calon Indukan</option><option value="Pedet">Pedet</option></select></div>
                         <div class="form-group"><label>Umur Saat Didaftarkan (Bulan)</label><input type="number" id="cowAge" placeholder="Contoh: 36" required></div>
                         <div class="form-group"><label>Bapak (Kode Straw Pejantan)</label><input type="text" id="cowSire" placeholder="Contoh: BULL-X"></div>
-                        <div class="form-group"><label>Ibu (EarTag Indukan)</label><input type="text" id="cowDam" placeholder="Contoh: SAPI-A01"></div>
+                        <div class="form-group"><label>Ibu (EarTag Indukan)</label><input type="text" id="cowDam" placeholder="Contoh: FH-001"></div>
                     </div>
-                    <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Data Sapi</button>
+                    <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Data Sapi ke Database</button>
                 </form>
             </div>
             <div class="card">
-                <h3>Daftar Populasi Sapi (Real-Time)</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                    <h3 style="margin:0;">Daftar Populasi Sapi (Real-Time)</h3>
+                    <input type="text" id="searchCowInput" oninput="renderCows()" placeholder="🔍 Cari EarTag / Status..." style="max-width:250px; padding:8px 12px;">
+                </div>
                 <div class="table-responsive">
                     <table><thead><tr><th>EarTag</th><th>Silsilah (Bpk/Ibu)</th><th>Status & Kategori</th><th>Umur Aktual</th><th>Aksi</th></tr></thead><tbody id="cowTableBody"></tbody></table>
                 </div>
@@ -269,26 +323,32 @@
         <!-- SUB-MODUL 2: KESEHATAN & IB -->
         <div class="sub-module-section" id="sub_health">
             <div class="card">
-                <h3>Pencatatan Inseminasi Buatan (IB) <span style="font-size:0.85rem; color:#f57c00;">*Anti-Inbreeding Aktif</span></h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+                    <h3 style="margin:0;">Pencatatan Inseminasi Buatan (IB) <span style="font-size:0.85rem; color:#f57c00;">*Anti-Inbreeding Aktif</span></h3>
+                    <button type="button" class="btn-qr" onclick="openQrScanner('breedTagSelect')">📷 Scan QR Sapi</button>
+                </div>
                 <form onsubmit="saveBreeding(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group"><label>Pilih Sapi (EarTag)</label><select id="breedTagSelect" required></select></div>
-                        <div class="form-group"><label>Kode Pejantan / Straw</label><input type="text" id="breedBull" required></div>
+                        <div class="form-group"><label>Kode Pejantan / Straw</label><input type="text" id="breedBull" placeholder="Contoh: BULL-Y" required></div>
                         <div class="form-group"><label>Tanggal IB</label><input type="date" id="breedDate" required></div>
                     </div>
                     <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Data IB</button>
                 </form>
             </div>
             <div class="card">
-                <h3>Riwayat IB & Estimasi HPL</h3>
+                <h3>Riwayat IB & Estimasi HPL (283 Hari)</h3>
                 <div class="table-responsive"><table><thead><tr><th>EarTag</th><th>Kode Straw</th><th>Tgl IB</th><th>Estimasi HPL</th><th>Aksi</th></tr></thead><tbody id="breedTableBody"></tbody></table></div>
             </div>
             <div class="card">
-                <h3>Catatan Rekap Medis</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+                    <h3 style="margin:0;">Catatan Rekap Medis</h3>
+                    <button type="button" class="btn-qr" onclick="openQrScanner('healthTagSelect')">📷 Scan QR Sapi</button>
+                </div>
                 <form onsubmit="saveHealth(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group"><label>Pilih Sapi</label><select id="healthTagSelect" required></select></div>
-                        <div class="form-group"><label>Keluhan / Diagnosa</label><input type="text" id="healthDesc" required></div>
+                        <div class="form-group"><label>Keluhan / Diagnosa & Obat</label><input type="text" id="healthDesc" placeholder="Contoh: Mastitis - Antibiotik" required></div>
                         <div class="form-group"><label>Tanggal Penanganan</label><input type="date" id="healthDate" required></div>
                     </div>
                     <button type="submit" class="btn-primary">Simpan Rekap Medis</button>
@@ -300,9 +360,12 @@
         <!-- SUB-MODUL 3: SUSU -->
         <div class="sub-module-section" id="sub_milk">
             <div class="card">
-                <h3>Pencatatan & Riwayat Pemerahan Susu</h3>
-                <p style="color:#666; font-size:0.9rem; margin-bottom:15px;">Pilih mode pencatatan di bawah. <b>Waktu pemerahan dicatat otomatis</b> oleh sistem saat tombol simpan ditekan sehingga pekerja tidak perlu mengatur jam secara manual.</p>
-                
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+                    <h3 style="margin:0;">Pencatatan & Riwayat Pemerahan Susu</h3>
+                    <button type="button" class="btn-qr" onclick="openQrScanner('milkTagSelect')">📷 Scan QR EarTag</button>
+                </div>
+                <p style="color:#666; font-size:0.9rem; margin-bottom:15px;">Pilih mode pencatatan di bawah. <b>Waktu pemerahan dicatat otomatis</b> oleh sistem saat tombol simpan ditekan.</p>
+
                 <div class="mode-toggle">
                     <button type="button" class="mode-btn active-ind" id="btnModeIndividual" onclick="switchMilkMode('individual')">
                         🐄 Mode Per Ekor (Input & Riwayat Individual)
@@ -324,7 +387,7 @@
                         </div>
                         <div class="form-group">
                             <label>Waktu (Otomatis)</label>
-                            <input type="text" id="milkAutoTimeDisplay" class="auto-time-input" readonly title="Otomatis terisi saat disimpan">
+                            <input type="text" id="milkAutoTimeDisplay" class="auto-time-input" readonly>
                         </div>
                         <div class="form-group">
                             <label>Sesi Perah</label>
@@ -343,7 +406,7 @@
                     </button>
                 </form>
             </div>
-            
+
             <div class="card" id="cardHistoryIndividual">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
                     <h3 style="color:#1976d2; margin: 0;">📋 Riwayat Produksi Susu — Mode Per Ekor</h3>
@@ -381,9 +444,9 @@
                 <h3>Manajemen Stok Pakan & Hijauan (HMT)</h3>
                 <form onsubmit="saveFeed(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div class="form-group"><label>Nama Pakan</label><input type="text" id="feedName" required></div>
-                        <div class="form-group"><label>Stok (Kg)</label><input type="number" step="0.1" id="feedQty" required></div>
-                        <div class="form-group"><label>Min Alert (Kg)</label><input type="number" step="0.1" id="feedMin" required></div>
+                        <div class="form-group"><label>Nama Pakan</label><input type="text" id="feedName" placeholder="Contoh: Konsentrat Laktasi" required></div>
+                        <div class="form-group"><label>Stok (Kg)</label><input type="number" step="0.1" id="feedQty" placeholder="Contoh: 500" required></div>
+                        <div class="form-group"><label>Min Alert (Kg)</label><input type="number" step="0.1" id="feedMin" placeholder="Contoh: 150" required></div>
                     </div>
                     <button type="submit" class="btn-primary" style="margin-top: 10px;">Simpan Stok Pakan</button>
                 </form>
@@ -499,7 +562,7 @@
             <div class="card">
                 <h3 style="color:#1b5e20;">📉 Analisis Efisiensi Pakan vs Hasil Susu (Real-Time)</h3>
                 <p style="color:#666;">Perhitungan otomatis perbandingan total volume susu laktasi dengan total biaya pengeluaran pakan.</p>
-                
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 20px;">
                     <div style="background:#e8f5e9; padding:20px; border-radius:8px; border-left:5px solid #2e7d32;"><small style="color:#2e7d32; font-weight:bold;">TOTAL PRODUKSI SUSU</small><div id="analysisTotalMilk" style="font-size:1.6rem; font-weight:900; color:#2e7d32;">0 Liter</div></div>
                     <div style="background:#fff3e0; padding:20px; border-radius:8px; border-left:5px solid #f57c00;"><small style="color:#e65100; font-weight:bold;">TOTAL BIAYA PAKAN</small><div id="analysisTotalFeedCost" style="font-size:1.6rem; font-weight:900; color:#e65100;">Rp 0</div></div>
@@ -525,8 +588,8 @@
                 <form onsubmit="saveFinance(event)">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group"><label>Jenis Transaksi</label><select id="finType" onchange="updateFinFormStyle(this.value)"><option value="Pemasukan">🟢 Pemasukan Farm</option><option value="Pengeluaran">🔴 Pengeluaran / Biaya</option></select></div>
-                        <div class="form-group"><label>Keterangan</label><input type="text" id="finDesc" required></div>
-                        <div class="form-group"><label>Nominal (Rp)</label><input type="text" id="finNominal" oninput="formatNominalInput(this)" required></div>
+                        <div class="form-group"><label>Keterangan</label><input type="text" id="finDesc" placeholder="Contoh: Setoran Susu KUD" required></div>
+                        <div class="form-group"><label>Nominal (Rp)</label><input type="text" id="finNominal" oninput="formatNominalInput(this)" placeholder="Contoh: 4.500.000" required></div>
                     </div>
                     <button type="submit" id="btnSubmitFin" class="btn-primary">Simpan Pemasukan Farm</button>
                 </form>
@@ -656,9 +719,16 @@
         <div class="sub-module-section" id="sub_export">
             <div class="card">
                 <h3 style="color:#00796b;">📑 Ekspor Laporan Laba Rugi & Rekapitulasi</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top:25px;">
-                    <div style="background:#e0f2f1; padding:25px; border-radius:12px; border-left:6px solid #00796b; text-align:center;"><h4 style="color:#004d40;">📊 Laporan PDF</h4><button class="btn-primary" style="background:#00796b;" onclick="alert('Laporan PDF berhasil disiapkan!')">Download PDF</button></div>
-                    <div style="background:#e8f5e9; padding:25px; border-radius:12px; border-left:6px solid #2e7d32; text-align:center;"><h4 style="color:#1b5e20;">📈 Excel Spreadsheet</h4><button class="btn-primary" style="background:#2e7d32;" onclick="alert('Spreadsheet Excel berhasil disiapkan!')">Download Excel</button></div>
+                <p style="color:#666;">Unduh rekap data langsung dari database operasional AWW Farm.</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top:20px;">
+                    <div style="background:#e0f2f1; padding:25px; border-radius:12px; border-left:6px solid #00796b; text-align:center;">
+                        <h4 style="color:#004d40;">📊 Cetak / Simpan PDF</h4>
+                        <button class="btn-primary" style="background:#00796b;" onclick="exportReportPDF()">Cetak Laporan Lengkap (PDF)</button>
+                    </div>
+                    <div style="background:#e8f5e9; padding:25px; border-radius:12px; border-left:6px solid #2e7d32; text-align:center;">
+                        <h4 style="color:#1b5e20;">📈 Unduh Excel (.CSV)</h4>
+                        <button class="btn-primary" style="background:#2e7d32;" onclick="exportReportExcel()">Download Rekap Excel</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -666,14 +736,24 @@
         <!-- SUB-MODUL 10: MANAJEMEN AKSES -->
         <div class="sub-module-section" id="sub_users">
             <div class="card" style="border: 2px solid #4a148c;">
-                <h3 style="color:#4a148c;">🔐 Manajemen Akses Pekerja</h3>
+                <h3 style="color:#4a148c;">🔐 Manajemen Akses & Peran Pekerja (Khusus Super Owner)</h3>
+                <form onsubmit="saveUserRole(event)" style="margin-bottom:20px; background:#f8f4fc; padding:15px; border-radius:8px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group" style="margin:0;"><label>Email Pekerja</label><input type="email" id="roleEmailInput" placeholder="pekerja@awwfarm.com" required></div>
+                        <div class="form-group" style="margin:0;"><label>Hak Akses / Jabatan</label>
+                            <select id="roleSelectInput">
+                                <option value="Super Owner">Super Owner (Akses Penuh)</option>
+                                <option value="Admin Farm">Admin Farm (Semua Kecuali Hak Akses)</option>
+                                <option value="Anak Kandang">Anak Kandang (Operasional Harian Saja)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="background:#4a148c; margin-top:12px;">Simpan / Perbarui Hak Akses</button>
+                </form>
                 <div class="table-responsive">
                     <table>
                         <thead><tr><th>Email Akun</th><th>Jabatan / Hak Akses</th><th>Aksi</th></tr></thead>
-                        <tbody id="rolesTableBody">
-                            <tr><td>admin-keuangan@awwfarm.com</td><td><span class="badge badge-primary">Admin Farm</span></td><td><button class="btn-danger" onclick="alert('Akses default')">Cabut</button></td></tr>
-                            <tr><td>pekerja-kandang@awwfarm.com</td><td><span class="badge badge-warning">Anak Kandang</span></td><td><button class="btn-danger" onclick="alert('Akses default')">Cabut</button></td></tr>
-                        </tbody>
+                        <tbody id="rolesTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -682,10 +762,105 @@
     </div>
 </div>
 
+<!-- MODAL QR CODE EARTAG -->
+<div class="modal-backdrop" id="qrModal">
+    <div class="modal-box">
+        <h3 id="qrModalTitle" style="margin-bottom:6px;">QR EarTag Sapi</h3>
+        <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Tempelkan atau cetak kode ini pada EarTag sapi</p>
+        <div id="qrCanvasContainer" style="display:flex; justify-content:center; margin:15px 0;"></div>
+        <button type="button" class="btn-danger" onclick="closeQrModal()" style="width:100%; padding:10px;">Tutup</button>
+    </div>
+</div>
+
+<!-- MODAL CAMERA QR SCANNER -->
+<div class="modal-backdrop" id="scannerModal">
+    <div class="modal-box" style="max-width:420px;">
+        <h3 style="margin-bottom:8px;">📷 Scan QR Code EarTag</h3>
+        <div id="qrReader" style="width:100%; border-radius:8px; overflow:hidden;"></div>
+        <button type="button" class="btn-danger" onclick="closeQrScanner()" style="width:100%; padding:10px; margin-top:12px;">Batal / Tutup Kamera</button>
+    </div>
+</div>
+
 <script>
-    const today = new Date();
-    const dt = (daysOffset) => new Date(today.getTime() + daysOffset * 86400000).toISOString().slice(0, 10);
-    
+    // =========================================================================
+    // 1. KONFIGURASI FIREBASE REALTIME DATABASE (AWW FARM SAPI PERAH)
+    // =========================================================================
+    const savedCfg = JSON.parse(localStorage.getItem('aww_firebase_cfg') || 'null');
+    const firebaseConfig = savedCfg || {
+        apiKey: "ISI_API_KEY_FIREBASE_ANDA",
+        authDomain: "managemen-ternak-sapi-perah.firebaseapp.com",
+        databaseURL: "https://managemen-ternak-sapi-perah-default-rtdb.firebaseio.com",
+        projectId: "managemen-ternak-sapi-perah",
+        storageBucket: "managemen-ternak-sapi-perah.appspot.com",
+        messagingSenderId: "ISI_SENDER_ID",
+        appId: "ISI_APP_ID"
+    };
+
+    let auth = null;
+    let db = null;
+    let firebaseReady = false;
+
+    function initFirebaseApp() {
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            auth = firebase.auth();
+            db = firebase.database();
+            firebaseReady = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("ISI_");
+            if (!firebaseReady) {
+                document.getElementById('firebaseSetupDetails').open = true;
+            }
+        } catch (err) {
+            console.error("Firebase init error:", err);
+        }
+    }
+
+    function saveFirebaseConfigLocal() {
+        const apiKey = document.getElementById('cfgApiKey').value.trim();
+        const dbUrl = document.getElementById('cfgDbUrl').value.trim();
+        const projectId = document.getElementById('cfgProjectId').value.trim();
+        if (!apiKey || !dbUrl || !projectId) {
+            alert("Harap isi API Key, Database URL, dan Project ID Firebase Anda.");
+            return;
+        }
+        const cfg = {
+            apiKey: apiKey,
+            authDomain: projectId + ".firebaseapp.com",
+            databaseURL: dbUrl,
+            projectId: projectId,
+            storageBucket: projectId + ".appspot.com"
+        };
+        localStorage.setItem('aww_firebase_cfg', JSON.stringify(cfg));
+        alert("Konfigurasi Firebase disimpan! Halaman akan dimuat ulang.");
+        window.location.reload();
+    }
+
+    initFirebaseApp();
+
+    // =========================================================================
+    // 2. STATE DATA REAL-TIME (DISINKRONKAN DENGAN FIREBASE RTDB)
+    // =========================================================================
+    let cows = [];
+    let milks = [];
+    let composts = [];
+    let finances = [];
+    let breedings = [];
+    let healths = [];
+    let feeds = [];
+    let crms = [];
+    let roles = [];
+
+    let currentUserEmail = "";
+    let currentUserRole = "Anak Kandang";
+    let milkInputMode = "individual";
+    let crmFilterMode = "ALL";
+    let html5QrScanner = null;
+    let scannerTargetElementId = "";
+
+    const todayStr = () => new Date().toISOString().slice(0, 10);
+    const addDaysStr = (daysOffset) => new Date(Date.now() + daysOffset * 86400000).toISOString().slice(0, 10);
+
     function getFormattedCurrentTime(includeSeconds = false) {
         const now = new Date();
         const hh = String(now.getHours()).padStart(2, '0');
@@ -697,82 +872,165 @@
         return `${hh}:${mm} WIB`;
     }
 
-    let cows = [
-        { id: 1, tag: 'SAPI-A01', status: 'Laktasi', age: 36, regDate: Date.now(), sire: 'BULL-X', dam: '-' },
-        { id: 2, tag: 'SAPI-A02', status: 'Laktasi', age: 40, regDate: Date.now(), sire: 'BULL-Y', dam: '-' },
-        { id: 3, tag: 'SAPI-A03', status: 'Laktasi', age: 32, regDate: Date.now(), sire: 'BULL-Z', dam: '-' },
-        { id: 4, tag: 'SAPI-A04', status: 'Laktasi', age: 50, regDate: Date.now(), sire: 'BULL-X', dam: '-' },
-        { id: 5, tag: 'SAPI-A05', status: 'Laktasi', age: 45, regDate: Date.now(), sire: 'BULL-W', dam: '-' },
-        { id: 6, tag: 'SAPI-B01', status: 'Bunting', age: 48, regDate: Date.now(), sire: 'BULL-Y', dam: '-' },
-        { id: 7, tag: 'SAPI-K01', status: 'Kering Kandang', age: 55, regDate: Date.now(), sire: 'BULL-V', dam: '-' },
-        { id: 8, tag: 'SAPI-D01', status: 'Dara / Calon Indukan', age: 14, regDate: Date.now(), sire: 'BULL-Z', dam: 'SAPI-A01' },
-        { id: 9, tag: 'SAPI-P01', status: 'Pedet', age: 3, regDate: Date.now(), sire: 'BULL-X', dam: 'SAPI-B02' }
-    ];
+    // =========================================================================
+    // 3. AUTENTIKASI & ROLE-BASED ACCESS CONTROL
+    // =========================================================================
+    if (auth) {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                currentUserEmail = (user.email || "").toLowerCase();
+                document.getElementById('loginCard').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                setDefaultDates();
+                startAutoClock();
+                attachRealtimeListeners();
+            } else {
+                document.getElementById('loginCard').style.display = 'block';
+                document.getElementById('appContainer').style.display = 'none';
+            }
+        });
+    }
 
-    let milks = [
-        { id: 1, mode: 'individual', tag: 'SAPI-A01', date: dt(0), time: '05:45 WIB', session: 'Pagi', volume: 15.5 },
-        { id: 2, mode: 'individual', tag: 'SAPI-A01', date: dt(0), time: '15:50 WIB', session: 'Sore', volume: 12.0 },
-        { id: 3, mode: 'individual', tag: 'SAPI-A02', date: dt(0), time: '05:52 WIB', session: 'Pagi', volume: 14.0 },
-        { id: 4, mode: 'individual', tag: 'SAPI-A03', date: dt(0), time: '06:04 WIB', session: 'Pagi', volume: 18.0 },
-        { id: 5, mode: 'individual', tag: 'SAPI-A04', date: dt(-1), time: '06:10 WIB', session: 'Pagi', volume: 13.5 },
-        { id: 6, mode: 'bulk', tag: 'BULK', date: dt(0), time: '06:30 WIB', session: 'Pagi', volume: 75.0 },
-        { id: 7, mode: 'bulk', tag: 'BULK', date: dt(0), time: '16:25 WIB', session: 'Sore', volume: 65.0 },
-        { id: 8, mode: 'bulk', tag: 'BULK', date: dt(-1), time: '06:28 WIB', session: 'Pagi', volume: 80.0 },
-        { id: 9, mode: 'bulk', tag: 'BULK', date: dt(-1), time: '16:20 WIB', session: 'Sore', volume: 68.5 }
-    ];
+    function loginUser(e) {
+        e.preventDefault();
+        if (!firebaseReady) {
+            alert("Silakan isi Firebase API Key pada bagian 'Pengaturan Koneksi Firebase' di bawah form login terlebih dahulu.");
+            document.getElementById('firebaseSetupDetails').open = true;
+            return;
+        }
+        const email = document.getElementById('loginEmail').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+        const errBox = document.getElementById('loginErrorMsg');
+        const btn = document.getElementById('btnLoginSubmit');
 
-    let composts = [
-        { id: 1, date: dt(-21), batch: 'Bak Kompos A1', stage: 3, qty: 450, note: 'Sudah gembur, tidak berbau, siap ayak/pakai' },
-        { id: 2, date: dt(-14), batch: 'Bak Kompos A2', stage: 4, qty: 300, note: 'Dikemas 12 karung @25 kg di gudang' },
-        { id: 3, date: dt(-7), batch: 'Bak Kompos B1', stage: 2, qty: 550, note: 'Pembalikan pertama selesai, suhu stabil' },
-        { id: 4, date: dt(0), batch: 'Bak Kompos B2', stage: 1, qty: 600, note: 'Kotoran baru + siram larutan EM4 & tutup terpal' }
-    ];
+        errBox.style.display = 'none';
+        btn.disabled = true;
+        btn.innerText = 'Memverifikasi akun...';
 
-    let finances = [
-        { id: 1, type: 'Pemasukan', desc: 'Jual Susu KUD (Minggu 1)', nominal: 4500000 },
-        { id: 2, type: 'Pemasukan', desc: 'Jual Susu KUD (Minggu 2)', nominal: 4800000 },
-        { id: 3, type: 'Pemasukan', desc: 'Jual Pupuk Kompos (50 Karung)', nominal: 750000 },
-        { id: 4, type: 'Pengeluaran', desc: 'Beli Konsentrat Pakan (2 Ton)', nominal: 11000000 },
-        { id: 5, type: 'Pengeluaran', desc: 'Listrik Kandang & Pompa Air', nominal: 350000 },
-        { id: 6, type: 'Pengeluaran', desc: 'Gaji Karyawan Kandang', nominal: 4000000 }
-    ];
+        auth.signInWithEmailAndPassword(email, pass)
+            .catch((error) => {
+                errBox.innerText = "Gagal Masuk: " + error.message;
+                errBox.style.display = 'block';
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = '🔐 Masuk ke Sistem Kandang';
+            });
+    }
 
-    let breedings = [
-        { id: 1, tag: 'SAPI-A01', bull: 'BULL-X', date: dt(-235), hpl: dt(45) }
-    ];
+    function logoutUser() {
+        if (auth && confirm("Keluar dari aplikasi AWW Farm?")) {
+            auth.signOut();
+        }
+    }
 
-    let healths = [
-        { id: 1, tag: 'SAPI-A04', desc: 'Mastitis (Antibiotik)', date: dt(0) }
-    ];
+    function applyUserPermissions() {
+        const matched = roles.find(r => (r.email || "").toLowerCase() === currentUserEmail);
+        if (matched) {
+            currentUserRole = matched.role;
+        } else if (roles.length === 0) {
+            currentUserRole = "Super Owner";
+        } else {
+            currentUserRole = "Anak Kandang";
+        }
 
-    let feeds = [
-        { id: 1, name: 'Konsentrat Sapi Perah', qty: 250, min: 300 },
-        { id: 2, name: 'Rumput Odot (HMT)', qty: 2500, min: 500 },
-        { id: 3, name: 'Tebon Jagung', qty: 1200, min: 400 },
-        { id: 4, name: 'Ampas Tahu', qty: 50, min: 100 },
-        { id: 5, name: 'Mineral Mix', qty: 25, min: 10 }
-    ];
+        const badge = document.getElementById('userRoleBadge');
+        badge.innerText = `Role: ${currentUserRole} (${currentUserEmail})`;
 
-    let crms = [
-        { id: 1, date: dt(-1), customer: 'Koperasi Susu (KUD)', phone: '0812-3344-5566', product: 'Susu Segar', qty: '640 Liter', prodStatus: 'Sudah Terkirim', amount: 4800000, status: 'Piutang' },
-        { id: 2, date: dt(-2), customer: 'Kelompok Tani Subur', phone: '0857-9988-7766', product: 'Pupuk Kompos', qty: '20 Karung (500 Kg)', prodStatus: 'Siap Diambil', amount: 600000, status: 'Piutang' },
-        { id: 3, date: dt(-3), customer: 'Agen Susu Segar Pak Budi', phone: '0813-5566-7788', product: 'Susu Segar', qty: '200 Liter', prodStatus: 'Sudah Terkirim', amount: 1600000, status: 'Lunas' },
-        { id: 4, date: dt(-5), customer: 'Peternak Mitra Blitar', phone: '0821-4433-2211', product: 'Ternak Sapi', qty: '1 Ekor Pedet Jantan', prodStatus: 'Sudah Terkirim', amount: 6500000, status: 'Lunas' }
-    ];
+        const isOwner = currentUserRole === "Super Owner";
+        const isAdmin = currentUserRole === "Admin Farm" || isOwner;
 
-    let milkInputMode = 'individual';
-    let crmFilterMode = 'ALL';
+        document.querySelectorAll('.owner-only-opt').forEach(el => {
+            el.style.display = isOwner ? '' : 'none';
+        });
+        document.querySelectorAll('.restricted-opt').forEach(el => {
+            el.style.display = isAdmin ? '' : 'none';
+        });
+        document.getElementById('cardFinance').style.display = isAdmin ? 'flex' : 'none';
+    }
 
-    window.onload = function() {
-        setTimeout(() => {
-            document.getElementById('loginCard').style.display = 'none';
-            document.getElementById('appContainer').style.display = 'block';
-            setDefaultDates();
-            startAutoClock();
-            renderAllData();
-        }, 700);
-    };
+    // =========================================================================
+    // 4. LISTENER FIREBASE REALTIME DATABASE
+    // =========================================================================
+    function snapToArray(snapshot) {
+        const list = [];
+        snapshot.forEach(child => {
+            list.push({ id: child.key, ...child.val() });
+        });
+        return list.reverse();
+    }
 
+    function attachRealtimeListeners() {
+        if (!db) return;
+
+        db.ref('.info/connected').on('value', (snap) => {
+            const badge = document.getElementById('dbConnectionBadge');
+            if (snap.val() === true) {
+                badge.className = 'badge badge-success';
+                badge.innerText = '🟢 TERHUBUNG FIREBASE';
+            } else {
+                badge.className = 'badge badge-warning';
+                badge.innerText = '🟠 MENYAMBUNG ULANG...';
+            }
+        });
+
+        db.ref('roles').on('value', (snap) => {
+            roles = snapToArray(snap);
+            applyUserPermissions();
+            renderRoles();
+        });
+
+        db.ref('cows').on('value', (snap) => {
+            cows = snapToArray(snap);
+            renderCows();
+            updateCowDropdowns();
+            renderAnalysis();
+        });
+
+        db.ref('milks').on('value', (snap) => {
+            milks = snapToArray(snap);
+            renderMilkTables();
+            renderAnalysis();
+        });
+
+        db.ref('composts').on('value', (snap) => {
+            composts = snapToArray(snap);
+            renderCompost();
+        });
+
+        db.ref('finances').on('value', (snap) => {
+            finances = snapToArray(snap);
+            renderFinance();
+            renderAnalysis();
+        });
+
+        db.ref('breedings').on('value', (snap) => {
+            breedings = snapToArray(snap);
+            renderBreeding();
+            checkAllAlerts();
+        });
+
+        db.ref('healths').on('value', (snap) => {
+            healths = snapToArray(snap);
+            renderHealth();
+        });
+
+        db.ref('feeds').on('value', (snap) => {
+            feeds = snapToArray(snap);
+            renderFeed();
+            checkAllAlerts();
+        });
+
+        db.ref('crms').on('value', (snap) => {
+            crms = snapToArray(snap);
+            renderCRM();
+            checkAllAlerts();
+        });
+    }
+
+    // =========================================================================
+    // 5. NAVIGASI & UTILITAS
+    // =========================================================================
     function startAutoClock() {
         const updateClock = () => {
             const el = document.getElementById('milkAutoTimeDisplay');
@@ -782,24 +1040,11 @@
         setInterval(updateClock, 1000);
     }
 
-    function renderAllData() {
-        renderCows();
-        updateCowDropdowns();
-        renderMilkTables();
-        renderCompost();
-        renderFinance();
-        renderBreeding();
-        renderHealth();
-        renderFeed();
-        renderCRM();
-        renderAnalysis();
-        checkAllAlerts();
-    }
-
     function setDefaultDates() {
-        const todayStr = new Date().toISOString().slice(0, 10);
+        const t = todayStr();
         ['breedDate', 'healthDate', 'milkDate', 'compostDate', 'crmDate'].forEach(id => {
-            const el = document.getElementById(id); if (el && !el.value) el.value = todayStr;
+            const el = document.getElementById(id);
+            if (el && !el.value) el.value = t;
         });
     }
 
@@ -807,45 +1052,268 @@
         const dashSec = document.getElementById('dashboardSection');
         const modSec = document.getElementById('modulesSection');
         const btns = document.querySelectorAll('.main-nav-btn');
-        if (tabName === 'dashboard') { dashSec.className = 'slide-section active'; modSec.className = 'slide-section'; btns[0].className = 'main-nav-btn active'; btns[1].className = 'main-nav-btn'; } else { dashSec.className = 'slide-section'; modSec.className = 'slide-section active'; btns[0].className = 'main-nav-btn'; btns[1].className = 'main-nav-btn active'; }
+        if (tabName === 'dashboard') {
+            dashSec.className = 'slide-section active';
+            modSec.className = 'slide-section';
+            btns[0].className = 'main-nav-btn active';
+            btns[1].className = 'main-nav-btn';
+        } else {
+            dashSec.className = 'slide-section';
+            modSec.className = 'slide-section active';
+            btns[0].className = 'main-nav-btn';
+            btns[1].className = 'main-nav-btn active';
+        }
     }
-    function jumpToModule(subModuleKey) { switchMainTab('modules'); document.getElementById('moduleSelector').value = subModuleKey; switchSubModule(subModuleKey); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    function switchSubModule(subKey) { document.querySelectorAll('.sub-module-section').forEach(el => { el.className = 'sub-module-section'; }); const targetEl = document.getElementById('sub_' + subKey); if (targetEl) targetEl.className = 'sub-module-section active'; }
+
+    function jumpToModule(subModuleKey) {
+        switchMainTab('modules');
+        document.getElementById('moduleSelector').value = subModuleKey;
+        switchSubModule(subModuleKey);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchSubModule(subKey) {
+        document.querySelectorAll('.sub-module-section').forEach(el => {
+            el.className = 'sub-module-section';
+        });
+        const targetEl = document.getElementById('sub_' + subKey);
+        if (targetEl) targetEl.className = 'sub-module-section active';
+    }
 
     function updateCowDropdowns() {
         const selectIds = ['breedTagSelect', 'healthTagSelect', 'milkTagSelect'];
         selectIds.forEach(id => {
-            const el = document.getElementById(id); if (!el) return;
+            const el = document.getElementById(id);
+            if (!el) return;
             const currentVal = el.value;
             el.innerHTML = '<option value="">-- Pilih Sapi Terdaftar --</option>';
-            cows.forEach(c => { el.innerHTML += `<option value="${c.tag}">${c.tag} (${c.status})</option>`; });
+            cows.forEach(c => {
+                el.innerHTML += `<option value="${c.tag}">${c.tag} (${c.status})</option>`;
+            });
             el.value = currentVal;
         });
     }
 
-    function saveCow(e) {
-        e.preventDefault();
-        cows.push({ id: Date.now(), tag: document.getElementById('cowTag').value.trim(), status: document.getElementById('cowStatus').value, age: document.getElementById('cowAge').value, regDate: Date.now(), sire: document.getElementById('cowSire').value.trim(), dam: document.getElementById('cowDam').value.trim() });
-        alert('Sapi berhasil disimpan!'); document.getElementById('cowTag').value = ''; document.getElementById('cowAge').value = '';
-        renderAllData();
-    }
-    function deleteCow(id) { if(confirm('Hapus sapi ini?')) { cows = cows.filter(i => i.id !== id); renderAllData(); } }
-    function renderCows() {
-        let tbody = document.getElementById('cowTableBody'); tbody.innerHTML = '';
-        let totalLactating = 0, totalPregnant = 0;
-        if(!cows.length) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada sapi terdaftar.</td></tr>`;
-        cows.forEach(i => { 
-            if(i.status === 'Laktasi') totalLactating++; if(i.status === 'Bunting') totalPregnant++;
-            tbody.innerHTML += `<tr><td><b>${i.tag}</b></td><td style="font-size:0.8rem;">Bpk: ${i.sire||'-'}<br>Ibu: ${i.dam||'-'}</td><td>${i.status}</td><td>${i.age} Bln</td><td><button class="btn-danger" onclick="deleteCow(${i.id})">Hapus</button></td></tr>`; 
-        });
-        document.getElementById('statTotalCows').innerText = cows.length + ' Ekor'; 
-        document.getElementById('statLactating').innerText = totalLactating + ' Ekor'; 
-        document.getElementById('statPregnantCows').innerText = totalPregnant + ' Ekor';
+    function calculateActualAgeMonths(baseAge, regTimestamp) {
+        const base = parseInt(baseAge, 10) || 0;
+        if (!regTimestamp) return base;
+        const elapsedMonths = Math.floor((Date.now() - Number(regTimestamp)) / (1000 * 60 * 60 * 24 * 30.4375));
+        return base + Math.max(0, elapsedMonths);
     }
 
-    // --- TOGGLE MODE SUSU INTERAKTIF ---
-    function switchMilkMode(mode) { 
-        milkInputMode = mode; 
+    // =========================================================================
+    // 6. MODUL 1: DATA POPULASI SAPI, QR EARTAG & SCANNER
+    // =========================================================================
+    function saveCow(e) {
+        e.preventDefault();
+        const tag = document.getElementById('cowTag').value.trim().toUpperCase();
+        if (cows.some(c => c.tag.toUpperCase() === tag)) {
+            alert(`EarTag "${tag}" sudah terdaftar di sistem!`);
+            return;
+        }
+        db.ref('cows').push({
+            tag: tag,
+            status: document.getElementById('cowStatus').value,
+            age: parseInt(document.getElementById('cowAge').value, 10),
+            regDate: Date.now(),
+            sire: document.getElementById('cowSire').value.trim() || '-',
+            dam: document.getElementById('cowDam').value.trim() || '-'
+        }).then(() => {
+            alert(`Data sapi ${tag} berhasil disimpan!`);
+            document.getElementById('cowTag').value = '';
+            document.getElementById('cowAge').value = '';
+            document.getElementById('cowSire').value = '';
+            document.getElementById('cowDam').value = '';
+        });
+    }
+
+    function updateCowStatus(id, newStatus) {
+        db.ref('cows/' + id).update({ status: newStatus });
+    }
+
+    function deleteCow(id) {
+        if (confirm('Hapus data sapi ini dari database?')) {
+            db.ref('cows/' + id).remove();
+        }
+    }
+
+    function renderCows() {
+        const tbody = document.getElementById('cowTableBody');
+        const keyword = (document.getElementById('searchCowInput')?.value || '').toLowerCase();
+        tbody.innerHTML = '';
+
+        let totalLactating = 0, totalPregnant = 0;
+        cows.forEach(c => {
+            if (c.status === 'Laktasi') totalLactating++;
+            if (c.status === 'Bunting') totalPregnant++;
+        });
+
+        document.getElementById('statTotalCows').innerText = cows.length + ' Ekor';
+        document.getElementById('statLactating').innerText = totalLactating + ' Ekor';
+        document.getElementById('statPregnantCows').innerText = totalPregnant + ' Ekor';
+
+        const filtered = cows.filter(c =>
+            c.tag.toLowerCase().includes(keyword) || (c.status || '').toLowerCase().includes(keyword)
+        );
+
+        if (!filtered.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada data sapi yang sesuai.</td></tr>`;
+            return;
+        }
+
+        filtered.forEach(i => {
+            const actualAge = calculateActualAgeMonths(i.age, i.regDate);
+            const statuses = ['Laktasi', 'Kering Kandang', 'Bunting', 'Dara / Calon Indukan', 'Pedet'];
+            const opts = statuses.map(st => `<option value="${st}" ${i.status === st ? 'selected' : ''}>${st}</option>`).join('');
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${i.tag}</b></td>
+                    <td style="font-size:0.82rem;">Bpk: ${i.sire || '-'}<br>Ibu: ${i.dam || '-'}</td>
+                    <td>
+                        <select onchange="updateCowStatus('${i.id}', this.value)" style="padding:6px 8px; font-size:0.85rem; width:auto;">
+                            ${opts}
+                        </select>
+                    </td>
+                    <td><b>${actualAge} Bln</b></td>
+                    <td>
+                        <button type="button" class="btn-qr" onclick="showQrModal('${i.tag}')" style="margin-right:5px;">📱 QR</button>
+                        <button type="button" class="btn-danger" onclick="deleteCow('${i.id}')">Hapus</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function showQrModal(tag) {
+        document.getElementById('qrModalTitle').innerText = `QR EarTag: ${tag}`;
+        const container = document.getElementById('qrCanvasContainer');
+        container.innerHTML = '';
+        new QRCode(container, { text: tag, width: 180, height: 180 });
+        document.getElementById('qrModal').style.display = 'flex';
+    }
+
+    function closeQrModal() {
+        document.getElementById('qrModal').style.display = 'none';
+    }
+
+    function openQrScanner(targetId) {
+        scannerTargetElementId = targetId;
+        document.getElementById('scannerModal').style.display = 'flex';
+        html5QrScanner = new Html5Qrcode("qrReader");
+        html5QrScanner.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 220, height: 220 } },
+            (decodedText) => {
+                const cleanTag = decodedText.trim().toUpperCase();
+                closeQrScanner();
+                if (scannerTargetElementId === 'cowSearch') {
+                    document.getElementById('searchCowInput').value = cleanTag;
+                    renderCows();
+                } else {
+                    const sel = document.getElementById(scannerTargetElementId);
+                    if (sel) sel.value = cleanTag;
+                }
+                alert(`QR Terdeteksi: ${cleanTag}`);
+            },
+            () => {}
+        ).catch(err => {
+            alert("Tidak dapat mengakses kamera: " + err);
+            closeQrScanner();
+        });
+    }
+
+    function closeQrScanner() {
+        document.getElementById('scannerModal').style.display = 'none';
+        if (html5QrScanner) {
+            html5QrScanner.stop().then(() => html5QrScanner.clear()).catch(() => {});
+            html5QrScanner = null;
+        }
+    }
+
+    // =========================================================================
+    // 7. MODUL 2: KESEHATAN, REKAP MEDIS & INSEMINASI BUATAN (ANTI-INBREEDING)
+    // =========================================================================
+    function saveBreeding(e) {
+        e.preventDefault();
+        const tag = document.getElementById('breedTagSelect').value;
+        const bull = document.getElementById('breedBull').value.trim().toUpperCase();
+        const ibDate = document.getElementById('breedDate').value;
+
+        const cowObj = cows.find(c => c.tag === tag);
+        if (cowObj && cowObj.sire && cowObj.sire.toUpperCase() === bull) {
+            if (!confirm(`⚠️ PERINGATAN INBREEDING!\n\nKode Straw "${bull}" sama dengan Pejantan/Bapak dari sapi ${tag}.\nTetap lanjutkan pencatatan IB ini?`)) {
+                return;
+            }
+        }
+
+        const ibTime = new Date(ibDate).getTime();
+        const hplStr = new Date(ibTime + 283 * 86400000).toISOString().slice(0, 10);
+
+        db.ref('breedings').push({
+            tag: tag,
+            bull: bull,
+            date: ibDate,
+            hpl: hplStr
+        }).then(() => {
+            alert(`Data IB untuk ${tag} berhasil disimpan! Estimasi HPL: ${hplStr}`);
+            document.getElementById('breedBull').value = '';
+        });
+    }
+
+    function deleteBreeding(id) {
+        if (confirm('Hapus riwayat IB ini?')) {
+            db.ref('breedings/' + id).remove();
+        }
+    }
+
+    function renderBreeding() {
+        const tbody = document.getElementById('breedTableBody');
+        tbody.innerHTML = '';
+        if (!breedings.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada riwayat inseminasi buatan.</td></tr>`;
+            return;
+        }
+        breedings.forEach(i => {
+            tbody.innerHTML += `<tr><td><b>${i.tag}</b></td><td>${i.bull}</td><td>${i.date}</td><td><span class="badge badge-primary">${i.hpl}</span></td><td><button class="btn-danger" onclick="deleteBreeding('${i.id}')">Hapus</button></td></tr>`;
+        });
+    }
+
+    function saveHealth(e) {
+        e.preventDefault();
+        db.ref('healths').push({
+            tag: document.getElementById('healthTagSelect').value,
+            desc: document.getElementById('healthDesc').value.trim(),
+            date: document.getElementById('healthDate').value
+        }).then(() => {
+            alert('Catatan rekap medis berhasil disimpan!');
+            document.getElementById('healthDesc').value = '';
+        });
+    }
+
+    function deleteHealth(id) {
+        if (confirm('Hapus catatan medis ini?')) {
+            db.ref('healths/' + id).remove();
+        }
+    }
+
+    function renderHealth() {
+        const tbody = document.getElementById('healthTableBody');
+        tbody.innerHTML = '';
+        if (!healths.length) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Belum ada catatan medis.</td></tr>`;
+            return;
+        }
+        healths.forEach(i => {
+            tbody.innerHTML += `<tr><td>${i.date}</td><td><b>${i.tag}</b></td><td>${i.desc}</td><td><button class="btn-danger" onclick="deleteHealth('${i.id}')">Hapus</button></td></tr>`;
+        });
+    }
+
+    // =========================================================================
+    // 8. MODUL 3: PRODUKSI SUSU (PER EKOR & TANGKI BULK)
+    // =========================================================================
+    function switchMilkMode(mode) {
+        milkInputMode = mode;
         const bInd = document.getElementById('btnModeIndividual');
         const bBulk = document.getElementById('btnModeBulk');
         const gt = document.getElementById('groupMilkTag');
@@ -855,11 +1323,11 @@
         const cardInd = document.getElementById('cardHistoryIndividual');
         const cardBulk = document.getElementById('cardHistoryBulk');
 
-        if (mode === 'individual') { 
-            bInd.className = 'mode-btn active-ind'; 
-            bBulk.className = 'mode-btn'; 
-            gt.style.display = 'block'; 
-            document.getElementById('milkTagSelect').setAttribute('required', 'true'); 
+        if (mode === 'individual') {
+            bInd.className = 'mode-btn active-ind';
+            bBulk.className = 'mode-btn';
+            gt.style.display = 'block';
+            document.getElementById('milkTagSelect').setAttribute('required', 'true');
             formBox.style.background = '#f8fbff';
             formBox.style.borderColor = '#d0e3ff';
             lblVol.innerText = 'Hasil Susu Per Ekor (Liter)';
@@ -867,11 +1335,11 @@
             btnSave.innerText = 'Simpan Hasil Perahan Per Ekor';
             cardInd.style.display = 'block';
             cardBulk.style.display = 'none';
-        } else { 
-            bBulk.className = 'mode-btn active-bulk'; 
-            bInd.className = 'mode-btn'; 
-            gt.style.display = 'none'; 
-            document.getElementById('milkTagSelect').removeAttribute('required'); 
+        } else {
+            bBulk.className = 'mode-btn active-bulk';
+            bInd.className = 'mode-btn';
+            gt.style.display = 'none';
+            document.getElementById('milkTagSelect').removeAttribute('required');
             formBox.style.background = '#f2fbfa';
             formBox.style.borderColor = '#b2dfdb';
             lblVol.innerText = 'Total Volume Tangki Bulk (Liter)';
@@ -879,89 +1347,127 @@
             btnSave.innerText = 'Simpan Volume Tangki Bulk';
             cardInd.style.display = 'none';
             cardBulk.style.display = 'block';
-        } 
+        }
     }
 
-    function saveMilk(e) { 
-        e.preventDefault(); 
-        let tag = milkInputMode === 'individual' ? document.getElementById('milkTagSelect').value : 'BULK'; 
-        let autoTime = getFormattedCurrentTime(false);
-        milks.unshift({ 
-            id: Date.now(), 
-            mode: milkInputMode, 
-            tag: tag, 
-            date: document.getElementById('milkDate').value, 
+    function saveMilk(e) {
+        e.preventDefault();
+        const tag = milkInputMode === 'individual' ? document.getElementById('milkTagSelect').value : 'BULK';
+        const autoTime = getFormattedCurrentTime(false);
+        const volume = parseFloat(document.getElementById('milkVolume').value);
+
+        db.ref('milks').push({
+            mode: milkInputMode,
+            tag: tag,
+            date: document.getElementById('milkDate').value,
             time: autoTime,
-            session: document.getElementById('milkSession').value, 
-            volume: parseFloat(document.getElementById('milkVolume').value) 
-        }); 
-        alert(`Pencatatan susu berhasil disimpan pada pukul ${autoTime}!`); 
-        document.getElementById('milkVolume').value = ''; 
-        renderMilkTables(); renderAnalysis();
+            session: document.getElementById('milkSession').value,
+            volume: volume
+        }).then(() => {
+            alert(`Pencatatan susu (${volume} L) berhasil disimpan pukul ${autoTime}!`);
+            document.getElementById('milkVolume').value = '';
+        });
     }
-    function deleteMilk(id) { milks = milks.filter(i => i.id !== id); renderMilkTables(); renderAnalysis(); }
-    
-    function renderMilkTables() { 
-        let tbodyInd = document.getElementById('milkTableBodyIndividual'); 
-        let tbodyBulk = document.getElementById('milkTableBodyBulk'); 
-        tbodyInd.innerHTML = ''; tbodyBulk.innerHTML = ''; 
-        
-        let todayStr = new Date().toISOString().slice(0, 10);
+
+    function deleteMilk(id) {
+        if (confirm('Hapus catatan pemerahan susu ini?')) {
+            db.ref('milks/' + id).remove();
+        }
+    }
+
+    function renderMilkTables() {
+        const tbodyInd = document.getElementById('milkTableBodyIndividual');
+        const tbodyBulk = document.getElementById('milkTableBodyBulk');
+        tbodyInd.innerHTML = '';
+        tbodyBulk.innerHTML = '';
+
+        const tStr = todayStr();
         let ttToday = 0, sumInd = 0, sumBulk = 0;
 
         milks.forEach(i => {
-            if(i.date === todayStr) ttToday += i.volume;
+            const vol = parseFloat(i.volume) || 0;
+            if (i.date === tStr) ttToday += vol;
             const timeBadge = `<span class="time-pill">🕒 ${i.time || '-'}</span>`;
-            if(i.mode === 'individual' || i.tag !== 'BULK') {
-                sumInd += i.volume;
-                tbodyInd.innerHTML += `<tr><td>${i.date}</td><td>${timeBadge}</td><td><b>${i.tag}</b></td><td>${i.session}</td><td><b style="color:#1976d2;">${i.volume} L</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
+            if (i.mode === 'individual' || i.tag !== 'BULK') {
+                sumInd += vol;
+                tbodyInd.innerHTML += `<tr><td>${i.date}</td><td>${timeBadge}</td><td><b>${i.tag}</b></td><td>${i.session}</td><td><b style="color:#1976d2;">${vol} L</b></td><td><button class="btn-danger" onclick="deleteMilk('${i.id}')">Hapus</button></td></tr>`;
             } else {
-                sumBulk += i.volume;
-                tbodyBulk.innerHTML += `<tr><td>${i.date}</td><td>${timeBadge}</td><td>${i.session}</td><td><b style="color:#00897b;">${i.volume} L</b></td><td><button class="btn-danger" onclick="deleteMilk(${i.id})">Hapus</button></td></tr>`;
+                sumBulk += vol;
+                tbodyBulk.innerHTML += `<tr><td>${i.date}</td><td>${timeBadge}</td><td>${i.session}</td><td><b style="color:#00897b;">${vol} L</b></td><td><button class="btn-danger" onclick="deleteMilk('${i.id}')">Hapus</button></td></tr>`;
             }
         });
 
-        if(!tbodyInd.innerHTML) tbodyInd.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Belum ada catatan per ekor.</td></tr>`;
-        if(!tbodyBulk.innerHTML) tbodyBulk.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada catatan tangki bulk.</td></tr>`;
+        if (!tbodyInd.innerHTML) tbodyInd.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Belum ada catatan per ekor.</td></tr>`;
+        if (!tbodyBulk.innerHTML) tbodyBulk.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada catatan tangki bulk.</td></tr>`;
 
         document.getElementById('badgeTotalInd').innerText = `Total Akumulasi: ${sumInd.toFixed(1)} Liter`;
         document.getElementById('badgeTotalBulk').innerText = `Total Akumulasi: ${sumBulk.toFixed(1)} Liter`;
-        document.getElementById('statMilkToday').innerText = ttToday.toFixed(1) + ' Liter'; 
+        document.getElementById('statMilkToday').innerText = ttToday.toFixed(1) + ' Liter';
     }
 
-    // --- PAKAN ---
-    function saveFeed(e) { 
-        e.preventDefault(); 
-        feeds.push({ id: Date.now(), name: document.getElementById('feedName').value, qty: parseFloat(document.getElementById('feedQty').value), min: parseFloat(document.getElementById('feedMin').value) }); 
-        alert('Stok pakan berhasil ditambahkan!'); document.getElementById('feedName').value = ''; document.getElementById('feedQty').value = ''; document.getElementById('feedMin').value = '';
-        renderFeed(); checkAllAlerts(); 
+    // =========================================================================
+    // 9. MODUL 4: MANAJEMEN STOK PAKAN & HIJAUAN (HMT)
+    // =========================================================================
+    function saveFeed(e) {
+        e.preventDefault();
+        db.ref('feeds').push({
+            name: document.getElementById('feedName').value.trim(),
+            qty: parseFloat(document.getElementById('feedQty').value),
+            min: parseFloat(document.getElementById('feedMin').value)
+        }).then(() => {
+            alert('Stok pakan berhasil disimpan!');
+            document.getElementById('feedName').value = '';
+            document.getElementById('feedQty').value = '';
+            document.getElementById('feedMin').value = '';
+        });
     }
-    function deleteFeed(id) { feeds = feeds.filter(i => i.id !== id); renderFeed(); checkAllAlerts(); }
-    
-    function renderFeed() { 
-        let tbody = document.getElementById('feedTableBody'); tbody.innerHTML = ''; 
-        if(!feeds.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Belum ada data pakan.</td></tr>`; return; }
-        
-        feeds.forEach(i => { 
-            let isKritis = parseFloat(i.qty) <= parseFloat(i.min);
-            let statusBadge = isKritis ? 
-                `<span class="badge-stok-kritis">⚠️ STOK KRITIS (Segera Belanja)</span>` : 
-                `<span class="badge-stok-aman">✅ AMAN (Stok Cukup)</span>`;
-            
+
+    function adjustFeedStock(id, currentQty) {
+        const input = prompt("Masukkan jumlah stok pakan terbaru (Kg):", currentQty);
+        if (input !== null && !isNaN(parseFloat(input))) {
+            db.ref('feeds/' + id).update({ qty: parseFloat(input) });
+        }
+    }
+
+    function deleteFeed(id) {
+        if (confirm('Hapus item pakan ini?')) {
+            db.ref('feeds/' + id).remove();
+        }
+    }
+
+    function renderFeed() {
+        const tbody = document.getElementById('feedTableBody');
+        tbody.innerHTML = '';
+        if (!feeds.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#777;">Belum ada data stok pakan.</td></tr>`;
+            return;
+        }
+        feeds.forEach(i => {
+            const isKritis = parseFloat(i.qty) <= parseFloat(i.min);
+            const statusBadge = isKritis
+                ? `<span class="badge-stok-kritis">⚠️ STOK KRITIS (Segera Belanja)</span>`
+                : `<span class="badge-stok-aman">✅ AMAN (Stok Cukup)</span>`;
+
             tbody.innerHTML += `
                 <tr style="${isKritis ? 'background-color: #fff8f8;' : ''}">
                     <td><b>${i.name}</b></td>
                     <td><b>${i.qty} Kg</b></td>
                     <td>${i.min} Kg</td>
                     <td>${statusBadge}</td>
-                    <td><button class="btn-danger" onclick="deleteFeed(${i.id})">Hapus</button></td>
-                </tr>`; 
-        }); 
+                    <td>
+                        <button class="btn-step" onclick="adjustFeedStock('${i.id}', ${i.qty})" style="margin-right:5px;">✏️ Update Stok</button>
+                        <button class="btn-danger" onclick="deleteFeed('${i.id}')">Hapus</button>
+                    </td>
+                </tr>
+            `;
+        });
     }
 
-    // --- PENGOLAHAN LIMBAH KOMPOS (WARNA & KATA INFORMATIF) ---
+    // =========================================================================
+    // 10. MODUL 5: PENGOLAHAN LIMBAH KOMPOS (WARNA & KATA INFORMATIF)
+    // =========================================================================
     function getCompostStageMeta(stageNum) {
-        const s = parseInt(stageNum, 10);
+        const s = parseInt(stageNum, 10) || 1;
         if (s === 1) return {
             rowClass: 'row-compost-1',
             badge: '<span class="badge badge-warning">🟠 Tahap 1: Fermentasi Awal</span>',
@@ -990,38 +1496,35 @@
 
     function saveCompost(e) {
         e.preventDefault();
-        composts.unshift({
-            id: Date.now(),
+        db.ref('composts').push({
             date: document.getElementById('compostDate').value,
             batch: document.getElementById('compostBatch').value.trim(),
             stage: parseInt(document.getElementById('compostStatus').value, 10),
             qty: parseFloat(document.getElementById('compostQty').value),
             note: document.getElementById('compostNote').value.trim() || '-'
+        }).then(() => {
+            alert('Catatan tumpukan limbah kompos berhasil disimpan!');
+            document.getElementById('compostBatch').value = '';
+            document.getElementById('compostQty').value = '';
+            document.getElementById('compostNote').value = '';
         });
-        alert('Catatan tumpukan limbah kompos berhasil disimpan!');
-        document.getElementById('compostBatch').value = '';
-        document.getElementById('compostQty').value = '';
-        document.getElementById('compostNote').value = '';
-        renderCompost();
     }
 
-    function advanceCompostStage(id) {
-        const item = composts.find(c => c.id === id);
-        if (item && item.stage < 4) {
-            item.stage += 1;
-            renderCompost();
+    function advanceCompostStage(id, currentStage) {
+        const nextStage = parseInt(currentStage, 10) + 1;
+        if (nextStage <= 4) {
+            db.ref('composts/' + id).update({ stage: nextStage });
         }
     }
 
     function deleteCompost(id) {
         if (confirm('Hapus catatan tumpukan kompos ini?')) {
-            composts = composts.filter(i => i.id !== id);
-            renderCompost();
+            db.ref('composts/' + id).remove();
         }
     }
 
     function renderCompost() {
-        let tbody = document.getElementById('compostTableBody');
+        const tbody = document.getElementById('compostTableBody');
         tbody.innerHTML = '';
         let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
 
@@ -1030,24 +1533,25 @@
         }
 
         composts.forEach(i => {
-            const st = parseInt(i.stage, 10);
-            if (st === 1) s1 += i.qty;
-            else if (st === 2) s2 += i.qty;
-            else if (st === 3) s3 += i.qty;
-            else s4 += i.qty;
+            const st = parseInt(i.stage, 10) || 1;
+            const qty = parseFloat(i.qty) || 0;
+            if (st === 1) s1 += qty;
+            else if (st === 2) s2 += qty;
+            else if (st === 3) s3 += qty;
+            else s4 += qty;
 
             const meta = getCompostStageMeta(st);
             const nextBtn = meta.nextLabel
-                ? `<button class="btn-step" onclick="advanceCompostStage(${i.id})" style="margin-right:6px;">${meta.nextLabel}</button>`
+                ? `<button class="btn-step" onclick="advanceCompostStage('${i.id}', ${st})" style="margin-right:6px;">${meta.nextLabel}</button>`
                 : `<span style="font-size:0.8rem; color:#006064; font-weight:bold; margin-right:8px;">✔ Siap Jual</span>`;
 
             tbody.innerHTML += `
                 <tr class="${meta.rowClass}">
                     <td><b>${i.batch}</b><br><small style="color:#666;">📅 ${i.date}</small></td>
                     <td>${meta.badge}<br><small style="color:#555;">${meta.desc}</small></td>
-                    <td style="white-space:normal; max-width:240px;">${i.note}</td>
-                    <td><b style="font-size:1rem;">${i.qty.toLocaleString('id-ID')} Kg</b></td>
-                    <td>${nextBtn}<button class="btn-danger" onclick="deleteCompost(${i.id})">Hapus</button></td>
+                    <td style="white-space:normal; max-width:240px;">${i.note || '-'}</td>
+                    <td><b style="font-size:1rem;">${qty.toLocaleString('id-ID')} Kg</b></td>
+                    <td>${nextBtn}<button class="btn-danger" onclick="deleteCompost('${i.id}')">Hapus</button></td>
                 </tr>
             `;
         });
@@ -1059,16 +1563,52 @@
         document.getElementById('statCompostStock').innerText = (s3 + s4).toLocaleString('id-ID') + ' Kg';
     }
 
-    // --- KESEHATAN & IB ---
-    function saveBreeding(e) { e.preventDefault(); breedings.push({ id: Date.now(), tag: document.getElementById('breedTagSelect').value, bull: document.getElementById('breedBull').value, date: document.getElementById('breedDate').value, hpl: dt(260) }); alert('IB disimpan!'); renderBreeding(); }
-    function deleteBreeding(id) { breedings = breedings.filter(i => i.id !== id); renderBreeding(); }
-    function renderBreeding() { let tbody = document.getElementById('breedTableBody'); tbody.innerHTML = ''; breedings.forEach(i => { tbody.innerHTML += `<tr><td>${i.tag}</td><td>${i.bull}</td><td>${i.date}</td><td>${i.hpl}</td><td><button class="btn-danger" onclick="deleteBreeding(${i.id})">Hapus</button></td></tr>`; }); }
+    // =========================================================================
+    // 11. MODUL 6: ANALISIS EFISIENSI PAKAN VS HASIL SUSU
+    // =========================================================================
+    function renderAnalysis() {
+        const totalMilkAll = milks.filter(m => m.tag !== 'BULK').reduce((a, c) => a + (parseFloat(c.volume) || 0), 0);
+        const totalFeedExpense = finances
+            .filter(f => f.type === 'Pengeluaran' && ((f.desc || '').toLowerCase().includes('pakan') || (f.desc || '').toLowerCase().includes('konsentrat') || (f.desc || '').toLowerCase().includes('rumput')))
+            .reduce((a, c) => a + (parseFloat(c.nominal) || 0), 0);
 
-    function saveHealth(e) { e.preventDefault(); healths.push({ id: Date.now(), tag: document.getElementById('healthTagSelect').value, desc: document.getElementById('healthDesc').value, date: document.getElementById('healthDate').value }); alert('Medis disimpan!'); renderHealth(); }
-    function deleteHealth(id) { healths = healths.filter(i => i.id !== id); renderHealth(); }
-    function renderHealth() { let tbody = document.getElementById('healthTableBody'); tbody.innerHTML = ''; healths.forEach(i => { tbody.innerHTML += `<tr><td>${i.date}</td><td>${i.tag}</td><td>${i.desc}</td><td><button class="btn-danger" onclick="deleteHealth(${i.id})">Hapus</button></td></tr>`; }); }
+        document.getElementById('analysisTotalMilk').innerText = totalMilkAll.toFixed(1) + ' Liter';
+        document.getElementById('analysisTotalFeedCost').innerText = formatRp(totalFeedExpense);
 
-    // --- KEUANGAN ---
+        let ratioIndicator = 'Sangat Efisien 🟢';
+        if (totalMilkAll < 50 && totalMilkAll > 0) ratioIndicator = 'Perlu Evaluasi Pakan 🟡';
+        else if (totalMilkAll === 0) ratioIndicator = 'Menunggu Data Perah ⚪';
+        document.getElementById('analysisEfficiencyRatio').innerText = ratioIndicator;
+
+        const tbody = document.getElementById('analysisTableBody');
+        tbody.innerHTML = '';
+
+        const lactCows = cows.filter(c => c.status === 'Laktasi');
+        if (!lactCows.length) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Tidak ada sapi laktasi aktif.</td></tr>`;
+            return;
+        }
+
+        lactCows.forEach(c => {
+            const cowVol = milks.filter(m => m.tag === c.tag).reduce((a, b) => a + (parseFloat(b.volume) || 0), 0);
+            const porsiPakan = '3.5 Kg Konsentrat + 15 Kg HMT';
+            const efStatus = cowVol > 20
+                ? '<span class="badge badge-success">Sangat Produktif</span>'
+                : '<span class="badge badge-warning">Normal</span>';
+            tbody.innerHTML += `
+                <tr>
+                    <td><b>${c.tag}</b></td>
+                    <td>${cowVol.toFixed(1)} Liter</td>
+                    <td>${porsiPakan}</td>
+                    <td>${efStatus}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // =========================================================================
+    // 12. MODUL 7: KEUANGAN & LABA/RUGI FARM
+    // =========================================================================
     function updateFinFormStyle(val) {
         const btn = document.getElementById('btnSubmitFin');
         if (val === 'Pemasukan') {
@@ -1080,45 +1620,74 @@
         }
     }
 
-    function formatNominalInput(input) { let val = input.value.replace(/\D/g, ""); input.value = val ? new Intl.NumberFormat('id-ID').format(parseInt(val, 10)) : ""; }
-    function formatRp(num) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num); }
-    
-    function saveFinance(e) { 
-        e.preventDefault(); 
-        let rawVal = document.getElementById('finNominal').value.replace(/\D/g, ""); 
-        finances.unshift({ id: Date.now(), type: document.getElementById('finType').value, desc: document.getElementById('finDesc').value, nominal: parseFloat(rawVal) }); 
-        alert('Transaksi berhasil dicatat!'); document.getElementById('finDesc').value = ''; document.getElementById('finNominal').value = '';
-        renderFinance(); renderAnalysis(); 
+    function formatNominalInput(input) {
+        const val = input.value.replace(/\D/g, "");
+        input.value = val ? new Intl.NumberFormat('id-ID').format(parseInt(val, 10)) : "";
     }
-    function deleteFinance(id) { finances = finances.filter(i => i.id !== id); renderFinance(); renderAnalysis(); }
-    
-    function renderFinance() { 
-        let tbody = document.getElementById('finTableBody'); tbody.innerHTML = ''; 
-        let ti=0, te=0; 
-        
-        finances.forEach(i => { 
-            if(i.type==='Pemasukan') ti += i.nominal; 
-            else te += i.nominal; 
 
-            let rowClass = i.type === 'Pemasukan' ? 'row-pemasukan' : 'row-pengeluaran';
-            let badgeType = i.type === 'Pemasukan' ? '<span class="badge badge-success">🟢 Pemasukan</span>' : '<span class="badge badge-danger">🔴 Pengeluaran</span>';
-            
+    function formatRp(num) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0);
+    }
+
+    function saveFinance(e) {
+        e.preventDefault();
+        const rawVal = document.getElementById('finNominal').value.replace(/\D/g, "");
+        db.ref('finances').push({
+            date: todayStr(),
+            type: document.getElementById('finType').value,
+            desc: document.getElementById('finDesc').value.trim(),
+            nominal: parseFloat(rawVal) || 0
+        }).then(() => {
+            alert('Transaksi keuangan berhasil dicatat!');
+            document.getElementById('finDesc').value = '';
+            document.getElementById('finNominal').value = '';
+        });
+    }
+
+    function deleteFinance(id) {
+        if (confirm('Hapus catatan transaksi keuangan ini?')) {
+            db.ref('finances/' + id).remove();
+        }
+    }
+
+    function renderFinance() {
+        const tbody = document.getElementById('finTableBody');
+        tbody.innerHTML = '';
+        let ti = 0, te = 0;
+
+        if (!finances.length) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#777;">Belum ada catatan transaksi keuangan.</td></tr>`;
+        }
+
+        finances.forEach(i => {
+            const nom = parseFloat(i.nominal) || 0;
+            if (i.type === 'Pemasukan') ti += nom;
+            else te += nom;
+
+            const rowClass = i.type === 'Pemasukan' ? 'row-pemasukan' : 'row-pengeluaran';
+            const badgeType = i.type === 'Pemasukan'
+                ? '<span class="badge badge-success">🟢 Pemasukan</span>'
+                : '<span class="badge badge-danger">🔴 Pengeluaran</span>';
+
             tbody.innerHTML += `
                 <tr class="${rowClass}">
                     <td>${badgeType}</td>
-                    <td><b>${i.desc}</b></td>
-                    <td style="font-weight:bold; color: ${i.type==='Pemasukan'?'#2e7d32':'#c62828'}">${formatRp(i.nominal)}</td>
-                    <td><button class="btn-danger" onclick="deleteFinance(${i.id})">Hapus</button></td>
-                </tr>`; 
-        }); 
+                    <td><b>${i.desc}</b><br><small style="color:#666;">${i.date || ''}</small></td>
+                    <td style="font-weight:bold; color:${i.type === 'Pemasukan' ? '#2e7d32' : '#c62828'}">${formatRp(nom)}</td>
+                    <td><button class="btn-danger" onclick="deleteFinance('${i.id}')">Hapus</button></td>
+                </tr>
+            `;
+        });
 
-        document.getElementById('summaryIncome').innerText = formatRp(ti); 
-        document.getElementById('summaryExpense').innerText = formatRp(te); 
-        document.getElementById('summaryProfitLoss').innerText = formatRp(ti-te); 
-        document.getElementById('statNetProfit').innerText = formatRp(ti-te); 
+        document.getElementById('summaryIncome').innerText = formatRp(ti);
+        document.getElementById('summaryExpense').innerText = formatRp(te);
+        document.getElementById('summaryProfitLoss').innerText = formatRp(ti - te);
+        document.getElementById('statNetProfit').innerText = formatRp(ti - te);
     }
 
-    // --- DATABASE PELANGGAN & PIUTANG (CRM INFORMATIF) ---
+    // =========================================================================
+    // 13. MODUL 8: DATABASE PELANGGAN & PIUTANG (CRM INFORMATIF)
+    // =========================================================================
     function updateCrmFormStyle(val) {
         const box = document.getElementById('crmFormBox');
         const btn = document.getElementById('btnSubmitCrm');
@@ -1150,10 +1719,10 @@
         const customer = document.getElementById('crmCustomer').value.trim();
         const product = document.getElementById('crmProduct').value;
         const qty = document.getElementById('crmQty').value.trim();
+        const orderDate = document.getElementById('crmDate').value;
 
-        crms.unshift({
-            id: Date.now(),
-            date: document.getElementById('crmDate').value,
+        db.ref('crms').push({
+            date: orderDate,
             customer: customer,
             phone: document.getElementById('crmPhone').value.trim() || '-',
             product: product,
@@ -1161,59 +1730,55 @@
             prodStatus: document.getElementById('crmProdStatus').value,
             amount: nominal,
             status: status
+        }).then(() => {
+            if (status === 'Lunas' && nominal > 0) {
+                db.ref('finances').push({
+                    date: orderDate,
+                    type: 'Pemasukan',
+                    desc: `Penjualan ${product} (${qty}) - ${customer}`,
+                    nominal: nominal
+                });
+            }
+            alert(`Data pelanggan "${customer}" berhasil disimpan (${status.toUpperCase()})!`);
+            document.getElementById('crmCustomer').value = '';
+            document.getElementById('crmPhone').value = '';
+            document.getElementById('crmQty').value = '';
+            document.getElementById('crmNominal').value = '';
         });
-
-        if (status === 'Lunas' && nominal > 0) {
-            finances.unshift({
-                id: Date.now() + 1,
-                type: 'Pemasukan',
-                desc: `Penjualan ${product} (${qty}) - ${customer}`,
-                nominal: nominal
-            });
-            renderFinance();
-        }
-
-        alert(`Data pelanggan "${customer}" berhasil disimpan dengan status ${status.toUpperCase()}!`);
-        document.getElementById('crmCustomer').value = '';
-        document.getElementById('crmPhone').value = '';
-        document.getElementById('crmQty').value = '';
-        document.getElementById('crmNominal').value = '';
-        renderCRM();
     }
 
     function markCrmPaid(id) {
         const item = crms.find(c => c.id === id);
         if (!item) return;
         if (confirm(`Konfirmasi pelunasan tagihan dari "${item.customer}" sebesar ${formatRp(item.amount)}?\n\nNominal ini juga akan otomatis masuk ke catatan Pemasukan Keuangan.`)) {
-            item.status = 'Lunas';
-            finances.unshift({
-                id: Date.now(),
-                type: 'Pemasukan',
-                desc: `Pelunasan Piutang ${item.product} (${item.qty}) - ${item.customer}`,
-                nominal: item.amount
+            db.ref('crms/' + id).update({ status: 'Lunas' }).then(() => {
+                db.ref('finances').push({
+                    date: todayStr(),
+                    type: 'Pemasukan',
+                    desc: `Pelunasan Piutang ${item.product} (${item.qty}) - ${item.customer}`,
+                    nominal: parseFloat(item.amount) || 0
+                });
             });
-            renderCRM();
-            renderFinance();
         }
     }
 
     function deleteCRM(id) {
         if (confirm('Hapus data transaksi pelanggan ini?')) {
-            crms = crms.filter(i => i.id !== id);
-            renderCRM();
+            db.ref('crms/' + id).remove();
         }
     }
 
     function renderCRM() {
-        let tbody = document.getElementById('crmTableBody');
+        const tbody = document.getElementById('crmTableBody');
         tbody.innerHTML = '';
 
         let totalPiutang = 0, countPiutang = 0;
         let totalLunas = 0, countLunas = 0;
 
         crms.forEach(i => {
-            if (i.status === 'Piutang') { totalPiutang += i.amount; countPiutang++; }
-            else { totalLunas += i.amount; countLunas++; }
+            const amt = parseFloat(i.amount) || 0;
+            if (i.status === 'Piutang') { totalPiutang += amt; countPiutang++; }
+            else { totalLunas += amt; countLunas++; }
         });
 
         document.getElementById('crmTotalPiutang').innerText = formatRp(totalPiutang);
@@ -1246,7 +1811,7 @@
                 : `<span class="badge badge-success">✅ LUNAS</span>`;
 
             const actionPayBtn = isPiutang
-                ? `<button class="btn-success" onclick="markCrmPaid(${i.id})" style="margin-right:6px;">✔ Tandai Lunas</button>`
+                ? `<button class="btn-success" onclick="markCrmPaid('${i.id}')" style="margin-right:6px;">✔ Tandai Lunas</button>`
                 : '';
 
             tbody.innerHTML += `
@@ -1257,55 +1822,112 @@
                     <td>${shipBadge}</td>
                     <td><b style="font-size:0.98rem; color:${isPiutang ? '#c62828' : '#2e7d32'};">${formatRp(i.amount)}</b></td>
                     <td>${payBadge}</td>
-                    <td>${actionPayBtn}<button class="btn-danger" onclick="deleteCRM(${i.id})">Hapus</button></td>
+                    <td>${actionPayBtn}<button class="btn-danger" onclick="deleteCRM('${i.id}')">Hapus</button></td>
                 </tr>
             `;
         });
     }
 
-    // --- FITUR ANALISIS EFISIENSI PAKAN VS SUSU ---
-    function renderAnalysis() {
-        let totalMilkAll = milks.filter(m => m.tag !== 'BULK').reduce((a,c) => a + c.volume, 0);
-        let totalFeedExpense = finances.filter(f => f.type === 'Pengeluaran' && (f.desc.toLowerCase().includes('pakan') || f.desc.toLowerCase().includes('konsentrat'))).reduce((a,c) => a + c.nominal, 0);
-        
-        document.getElementById('analysisTotalMilk').innerText = totalMilkAll.toFixed(1) + ' Liter';
-        document.getElementById('analysisTotalFeedCost').innerText = formatRp(totalFeedExpense);
-        
-        let ratioIndicator = 'Sangat Efisien 🟢';
-        if (totalMilkAll < 50) ratioIndicator = 'Perlu Peningkatan Pakan 🟡';
-        document.getElementById('analysisEfficiencyRatio').innerText = ratioIndicator;
+    // =========================================================================
+    // 14. MODUL 9 & 10: EKSPOR LAPORAN & MANAJEMEN AKSES PENGGUNA
+    // =========================================================================
+    function exportReportExcel() {
+        let csv = "KATEGORI,TANGGAL,KETERANGAN,DETAIL,NOMINAL_ATAU_JUMLAH,STATUS\n";
+        finances.forEach(f => {
+            csv += `Keuangan,${f.date || '-'},"${f.desc}",${f.type},${f.nominal},${f.type}\n`;
+        });
+        crms.forEach(c => {
+            csv += `Pelanggan,${c.date},"${c.customer}","${c.product} (${c.qty})",${c.amount},${c.status}\n`;
+        });
+        composts.forEach(k => {
+            csv += `Kompos,${k.date},"${k.batch}","Tahap ${k.stage}",${k.qty},Kg\n`;
+        });
+        milks.forEach(m => {
+            csv += `Susu,${m.date},"${m.tag}",${m.session},${m.volume},Liter\n`;
+        });
 
-        let tbody = document.getElementById('analysisTableBody');
-        tbody.innerHTML = '';
-        
-        const lactCows = cows.filter(c => c.status === 'Laktasi');
-        if (!lactCows.length) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Tidak ada sapi laktasi aktif.</td></tr>`;
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Laporan_AWW_Farm_${todayStr()}.csv`;
+        link.click();
+    }
+
+    function exportReportPDF() {
+        window.print();
+    }
+
+    function saveUserRole(e) {
+        e.preventDefault();
+        if (currentUserRole !== "Super Owner") {
+            alert("Hanya Super Owner yang dapat mengubah hak akses.");
             return;
         }
+        const email = document.getElementById('roleEmailInput').value.trim().toLowerCase();
+        const role = document.getElementById('roleSelectInput').value;
+        const existing = roles.find(r => (r.email || "").toLowerCase() === email);
 
-        lactCows.forEach(c => {
-            let cowVol = milks.filter(m => m.tag === c.tag).reduce((a,b) => a + b.volume, 0);
-            let porsiPakan = '3.5 Kg Konsentrat + 15 Kg HMT';
-            let efStatus = cowVol > 20 ? '<span class="badge badge-success">Sangat Produktif</span>' : '<span class="badge badge-warning">Normal</span>';
+        if (existing) {
+            db.ref('roles/' + existing.id).update({ role: role });
+        } else {
+            db.ref('roles').push({ email: email, role: role });
+        }
+        alert(`Hak akses untuk ${email} ditetapkan sebagai ${role}.`);
+        document.getElementById('roleEmailInput').value = '';
+    }
+
+    function deleteUserRole(id) {
+        if (confirm('Cabut hak akses akun ini?')) {
+            db.ref('roles/' + id).remove();
+        }
+    }
+
+    function renderRoles() {
+        const tbody = document.getElementById('rolesTableBody');
+        tbody.innerHTML = '';
+        if (!roles.length) {
+            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#777;">Belum ada daftar hak akses tambahan.</td></tr>`;
+            return;
+        }
+        roles.forEach(r => {
+            let badgeCls = 'badge-warning';
+            if (r.role === 'Super Owner') badgeCls = 'badge-owner';
+            else if (r.role === 'Admin Farm') badgeCls = 'badge-primary';
+
             tbody.innerHTML += `
                 <tr>
-                    <td><b>${c.tag}</b></td>
-                    <td>${cowVol.toFixed(1)} Liter</td>
-                    <td>${porsiPakan}</td>
-                    <td>${efStatus}</td>
+                    <td><b>${r.email}</b></td>
+                    <td><span class="badge ${badgeCls}">${r.role}</span></td>
+                    <td><button class="btn-danger" onclick="deleteUserRole('${r.id}')">Cabut</button></td>
                 </tr>
             `;
         });
     }
 
+    // =========================================================================
+    // 15. ALERT DASHBOARD OTOMATIS
+    // =========================================================================
     function checkAllAlerts() {
         let alertsHTML = '';
+
         const critFeeds = feeds.filter(f => parseFloat(f.qty) <= parseFloat(f.min));
         if (critFeeds.length > 0) {
-            alertsHTML += `<div style="background:#fff5f5; border-left:5px solid #c62828; padding:12px; border-radius:6px; margin-bottom:8px;"><p style="color:#c62828; font-weight:bold; margin:0;">🔴 PERINGATAN STOK PAKAN: ${critFeeds.map(f=>f.name).join(', ')} sudah berada di bawah batas minimum!</p></div>`;
+            alertsHTML += `<div style="background:#fff5f5; border-left:5px solid #c62828; padding:12px; border-radius:6px; margin-bottom:8px;"><p style="color:#c62828; font-weight:bold; margin:0;">🔴 PERINGATAN STOK PAKAN: ${critFeeds.map(f => f.name).join(', ')} sudah berada di bawah batas minimum!</p></div>`;
         }
-        if (!alertsHTML) alertsHTML = '<div style="background:#e8f5e9; padding:15px; border-radius:6px;"><p style="color:#2e7d32; font-weight:bold; margin:0;">✅ Semua operasional kandang aman & lancar.</p></div>';
+
+        const totalPiutang = crms.filter(c => c.status === 'Piutang').reduce((a, b) => a + (parseFloat(b.amount) || 0), 0);
+        if (totalPiutang > 0) {
+            alertsHTML += `<div style="background:#fff8e1; border-left:5px solid #ef6c00; padding:12px; border-radius:6px; margin-bottom:8px;"><p style="color:#e65100; font-weight:bold; margin:0;">⏳ TAGIHAN PELANGGAN (PIUTANG): Terdapat total ${formatRp(totalPiutang)} yang belum dilunasi pelanggan.</p></div>`;
+        }
+
+        const soonHpl = breedings.filter(b => b.hpl && b.hpl >= todayStr() && b.hpl <= addDaysStr(14));
+        if (soonHpl.length > 0) {
+            alertsHTML += `<div style="background:#f3e5f5; border-left:5px solid #7b1fa2; padding:12px; border-radius:6px; margin-bottom:8px;"><p style="color:#6a1b9a; font-weight:bold; margin:0;">🧬 PERSIAPAN KELAHIRAN (HPL < 14 Hari): ${soonHpl.map(b => b.tag + ' (' + b.hpl + ')').join(', ')}</p></div>`;
+        }
+
+        if (!alertsHTML) {
+            alertsHTML = '<div style="background:#e8f5e9; padding:15px; border-radius:6px;"><p style="color:#2e7d32; font-weight:bold; margin:0;">✅ Semua operasional kandang, stok pakan, dan tagihan dalam kondisi aman.</p></div>';
+        }
         document.getElementById('dashboardAlertsContainer').innerHTML = alertsHTML;
     }
 </script>
