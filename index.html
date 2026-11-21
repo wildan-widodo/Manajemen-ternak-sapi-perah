@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWW Farm Sapi Perah - Sistem Manajemen Kandang Pro v6.0</title>
+    <title>Farm Sapi Perah - Sistem Manajemen Kandang Pro v6.0</title>
     <meta name="app-version" content="6.0.0-production-rtdb">
 
     <!-- Firebase SDK v10 Compat (Auth & Realtime Database) -->
@@ -152,13 +152,13 @@
 <!-- HALAMAN LOGIN PRODUKSI (FIREBASE AUTH) -->
 <div class="login-container" id="loginCard">
     <div class="login-logo">🐄</div>
-    <h2 style="margin-bottom: 4px;">AWW FARM SAPI PERAH</h2>
+    <h2 style="margin-bottom: 4px;" id="loginFarmTitle">FARM SAPI PERAH</h2>
     <p style="font-size: 0.9rem; color: #666; margin-bottom: 22px;">Sistem Manajemen Kandang Terpadu (v6.0 Live)</p>
 
     <form onsubmit="loginUser(event)">
         <div class="form-group">
             <label>Email Akun Kandang</label>
-            <input type="email" id="loginEmail" placeholder="contoh: owner@awwfarm.com" required>
+            <input type="email" id="loginEmail" placeholder="contoh: wildansambi69@gmail.com" required>
         </div>
         <div class="form-group">
             <label>Password</label>
@@ -192,7 +192,7 @@
 <div class="container" id="appContainer">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0;">
         <h2 style="margin: 0; color: #1b5e20; display: flex; align-items: center; gap: 10px;">
-            <span style="font-size: 1.8rem;">🐄</span> AWW Farm Sapi Perah FH (Pro v6)
+            <span style="font-size: 1.8rem;">🐄</span> <span id="headerFarmTitle">Farm Sapi Perah FH (Pro v6)</span>
         </h2>
         <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             <span class="badge badge-success" id="dbConnectionBadge" style="font-size: 0.82rem; padding: 6px 12px;">🟢 LIVE CLOUD SYNC</span>
@@ -287,7 +287,7 @@
                 <option value="finance" class="restricted-opt">💰 7. Keuangan & Laba/Rugi Farm</option>
                 <option value="crm" class="restricted-opt">🤝 8. Database Pelanggan & Tagihan (CRM)</option>
                 <option value="export" class="restricted-opt">📑 9. Ekspor Laporan (PDF & Excel)</option>
-                <option value="users" class="owner-only-opt">🔐 10. Manajemen Akses & Akun (Khusus Owner)</option>
+                <option value="users" class="owner-only-opt">🔐 10. Manajemen Akses & Pengaturan Farm (Khusus Owner)</option>
             </select>
         </div>
 
@@ -459,13 +459,12 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 5: PENGOLAHAN LIMBAH KOMPOS (INFORMATIF & KODE WARNA JELAS) -->
+        <!-- SUB-MODUL 5: PENGOLAHAN LIMBAH KOMPOS -->
         <div class="sub-module-section" id="sub_compost">
             <div class="card">
                 <h3>🌱 Pengolahan Limbah Kotoran Menjadi Pupuk Kompos</h3>
                 <p style="color:#555; font-size:0.92rem; margin-bottom:15px;">Pantau setiap tumpukan limbah dari kotoran basah hingga menjadi pupuk kompos matang siap jual. Setiap tahap memiliki <b>kode warna berbeda</b> agar mudah dibedakan pekerja kandang.</p>
 
-                <!-- Panduan Warna Tahapan -->
                 <div class="compost-guide-bar">
                     <div class="compost-step-item" style="background:#fff3e0; border-left:4px solid #ef6c00;">
                         <b style="color:#e65100;">🟠 Tahap 1: Fermentasi Awal</b><br>
@@ -485,7 +484,6 @@
                     </div>
                 </div>
 
-                <!-- Ringkasan Stok Per Tahap -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                     <div style="background:#fff3e0; padding:16px; border-radius:8px; border-left:5px solid #ef6c00;">
                         <small style="color:#e65100; font-weight:bold;">🟠 FERMENTASI AWAL (BARU)</small>
@@ -505,7 +503,6 @@
                     </div>
                 </div>
 
-                <!-- Form Tambah Batch Limbah Kompos -->
                 <form onsubmit="saveCompost(event)" style="background:#f9fbf9; padding:18px; border-radius:10px; border:1px solid #dcedc8;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                         <div class="form-group">
@@ -609,13 +606,12 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 8: DATABASE PELANGGAN & TAGIHAN (CRM INFORMATIF) -->
+        <!-- SUB-MODUL 8: DATABASE PELANGGAN & TAGIHAN (CRM) -->
         <div class="sub-module-section" id="sub_crm">
             <div class="card">
                 <h3>🤝 Database Pelanggan, Status Produk & Tagihan (Piutang vs Lunas)</h3>
                 <p style="color:#555; font-size:0.92rem; margin-bottom:18px;">Catat setiap pesanan pelanggan beserta <b>status pengiriman produk</b> dan <b>status pembayarannya</b>. Baris berwarna <b style="color:#c62828;">merah</b> menandakan tagihan belum dibayar (Piutang), sedangkan baris <b style="color:#2e7d32;">hijau</b> sudah lunas.</p>
 
-                <!-- Ringkasan Piutang vs Lunas -->
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
                     <div style="background:#ffebee; padding:18px; border-radius:10px; border-left:5px solid #c62828;">
                         <small style="color:#b71c1c; font-weight:bold;">⏳ TOTAL PIUTANG (BELUM LUNAS)</small>
@@ -634,7 +630,6 @@
                     </div>
                 </div>
 
-                <!-- Form Input Transaksi Pelanggan -->
                 <form onsubmit="saveCRM(event)" id="crmFormBox" style="background:#fff8f8; padding:18px; border-radius:10px; border:1px solid #ffcdd2;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 15px;">
                         <div class="form-group">
@@ -719,7 +714,7 @@
         <div class="sub-module-section" id="sub_export">
             <div class="card">
                 <h3 style="color:#00796b;">📑 Ekspor Laporan Laba Rugi & Rekapitulasi</h3>
-                <p style="color:#666;">Unduh rekap data langsung dari database operasional AWW Farm.</p>
+                <p style="color:#666;">Unduh rekap data langsung dari database operasional kandang.</p>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top:20px;">
                     <div style="background:#e0f2f1; padding:25px; border-radius:12px; border-left:6px solid #00796b; text-align:center;">
                         <h4 style="color:#004d40;">📊 Cetak / Simpan PDF</h4>
@@ -733,13 +728,25 @@
             </div>
         </div>
 
-        <!-- SUB-MODUL 10: MANAJEMEN AKSES -->
+        <!-- SUB-MODUL 10: MANAJEMEN AKSES & PENGATURAN NAMA FARM -->
         <div class="sub-module-section" id="sub_users">
+            <div class="card" style="border: 2px solid #2e7d32; margin-bottom: 20px;">
+                <h3 style="color:#1b5e20;">🏷️ Pengaturan Nama Farm (Khusus Super Owner)</h3>
+                <p style="color:#555; font-size:0.9rem; margin-bottom:14px;">Isi nama farm baru Anda di bawah ini kapan pun sudah ditentukan. Perubahan akan langsung diterapkan ke seluruh halaman dan laporan.</p>
+                <form onsubmit="saveFarmName(event)" style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+                    <div class="form-group" style="flex:1; min-width:240px; margin:0;">
+                        <label>Nama Peternakan / Farm</label>
+                        <input type="text" id="farmNameInput" placeholder="Contoh: Berkah Dairy Farm" required>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:auto; padding:11px 22px;">💾 Simpan Nama Farm</button>
+                </form>
+            </div>
+
             <div class="card" style="border: 2px solid #4a148c;">
                 <h3 style="color:#4a148c;">🔐 Manajemen Akses & Peran Pekerja (Khusus Super Owner)</h3>
                 <form onsubmit="saveUserRole(event)" style="margin-bottom:20px; background:#f8f4fc; padding:15px; border-radius:8px;">
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        <div class="form-group" style="margin:0;"><label>Email Pekerja</label><input type="email" id="roleEmailInput" placeholder="pekerja@awwfarm.com" required></div>
+                        <div class="form-group" style="margin:0;"><label>Email Pekerja</label><input type="email" id="roleEmailInput" placeholder="pekerja@farm.com" required></div>
                         <div class="form-group" style="margin:0;"><label>Hak Akses / Jabatan</label>
                             <select id="roleSelectInput">
                                 <option value="Super Owner">Super Owner (Akses Penuh)</option>
@@ -783,9 +790,12 @@
 
 <script>
     // =========================================================================
-    // 1. KONFIGURASI FIREBASE REALTIME DATABASE (AWW FARM SAPI PERAH)
+    // 1. KONFIGURASI FIREBASE REALTIME DATABASE & SUPER OWNER UTAMA
     // =========================================================================
-    const savedCfg = JSON.parse(localStorage.getItem('aww_firebase_cfg') || 'null');
+    const PRIMARY_SUPER_OWNER = "wildansambi69@gmail.com";
+    const DEFAULT_FARM_NAME = "Farm Sapi Perah";
+
+    const savedCfg = JSON.parse(localStorage.getItem('farm_firebase_cfg') || 'null');
     const firebaseConfig = savedCfg || {
         apiKey: "ISI_API_KEY_FIREBASE_ANDA",
         authDomain: "managemen-ternak-sapi-perah.firebaseapp.com",
@@ -799,6 +809,24 @@
     let auth = null;
     let db = null;
     let firebaseReady = false;
+    let currentFarmName = localStorage.getItem('custom_farm_name') || DEFAULT_FARM_NAME;
+
+    function applyFarmBranding(name) {
+        const cleanName = (name || "").trim() || DEFAULT_FARM_NAME;
+        currentFarmName = cleanName;
+        localStorage.setItem('custom_farm_name', cleanName);
+
+        document.title = `${cleanName} - Sistem Manajemen Kandang Pro v6.0`;
+        const loginTitle = document.getElementById('loginFarmTitle');
+        const headerTitle = document.getElementById('headerFarmTitle');
+        const farmInput = document.getElementById('farmNameInput');
+
+        if (loginTitle) loginTitle.innerText = cleanName.toUpperCase();
+        if (headerTitle) headerTitle.innerText = `${cleanName} FH (Pro v6)`;
+        if (farmInput && document.activeElement !== farmInput) farmInput.value = cleanName;
+    }
+
+    applyFarmBranding(currentFarmName);
 
     function initFirebaseApp() {
         try {
@@ -831,7 +859,7 @@
             projectId: projectId,
             storageBucket: projectId + ".appspot.com"
         };
-        localStorage.setItem('aww_firebase_cfg', JSON.stringify(cfg));
+        localStorage.setItem('farm_firebase_cfg', JSON.stringify(cfg));
         alert("Konfigurasi Firebase disimpan! Halaman akan dimuat ulang.");
         window.location.reload();
     }
@@ -878,9 +906,10 @@
     if (auth) {
         auth.onAuthStateChanged((user) => {
             if (user) {
-                currentUserEmail = (user.email || "").toLowerCase();
+                currentUserEmail = (user.email || "").trim().toLowerCase();
                 document.getElementById('loginCard').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
+                applyUserPermissions();
                 setDefaultDates();
                 startAutoClock();
                 attachRealtimeListeners();
@@ -919,17 +948,18 @@
     }
 
     function logoutUser() {
-        if (auth && confirm("Keluar dari aplikasi AWW Farm?")) {
+        if (auth && confirm("Keluar dari aplikasi manajemen kandang?")) {
             auth.signOut();
         }
     }
 
     function applyUserPermissions() {
-        const matched = roles.find(r => (r.email || "").toLowerCase() === currentUserEmail);
-        if (matched) {
-            currentUserRole = matched.role;
-        } else if (roles.length === 0) {
+        const matched = roles.find(r => (r.email || "").trim().toLowerCase() === currentUserEmail);
+
+        if (currentUserEmail === PRIMARY_SUPER_OWNER) {
             currentUserRole = "Super Owner";
+        } else if (matched) {
+            currentUserRole = matched.role;
         } else {
             currentUserRole = "Anak Kandang";
         }
@@ -974,8 +1004,22 @@
             }
         });
 
+        db.ref('settings/farmName').on('value', (snap) => {
+            if (snap.exists() && snap.val()) {
+                applyFarmBranding(snap.val());
+            }
+        });
+
         db.ref('roles').on('value', (snap) => {
             roles = snapToArray(snap);
+            if (currentUserEmail === PRIMARY_SUPER_OWNER) {
+                const ownerRecord = roles.find(r => (r.email || "").trim().toLowerCase() === PRIMARY_SUPER_OWNER);
+                if (!ownerRecord) {
+                    db.ref('roles').push({ email: PRIMARY_SUPER_OWNER, role: "Super Owner" });
+                } else if (ownerRecord.role !== "Super Owner") {
+                    db.ref('roles/' + ownerRecord.id).update({ role: "Super Owner" });
+                }
+            }
             applyUserPermissions();
             renderRoles();
         });
@@ -1464,7 +1508,7 @@
     }
 
     // =========================================================================
-    // 10. MODUL 5: PENGOLAHAN LIMBAH KOMPOS (WARNA & KATA INFORMATIF)
+    // 10. MODUL 5: PENGOLAHAN LIMBAH KOMPOS
     // =========================================================================
     function getCompostStageMeta(stageNum) {
         const s = parseInt(stageNum, 10) || 1;
@@ -1686,7 +1730,7 @@
     }
 
     // =========================================================================
-    // 13. MODUL 8: DATABASE PELANGGAN & PIUTANG (CRM INFORMATIF)
+    // 13. MODUL 8: DATABASE PELANGGAN & PIUTANG (CRM)
     // =========================================================================
     function updateCrmFormStyle(val) {
         const box = document.getElementById('crmFormBox');
@@ -1829,7 +1873,7 @@
     }
 
     // =========================================================================
-    // 14. MODUL 9 & 10: EKSPOR LAPORAN & MANAJEMEN AKSES PENGGUNA
+    // 14. MODUL 9 & 10: EKSPOR LAPORAN, NAMA FARM & MANAJEMEN AKSES PENGGUNA
     // =========================================================================
     function exportReportExcel() {
         let csv = "KATEGORI,TANGGAL,KETERANGAN,DETAIL,NOMINAL_ATAU_JUMLAH,STATUS\n";
@@ -1846,15 +1890,31 @@
             csv += `Susu,${m.date},"${m.tag}",${m.session},${m.volume},Liter\n`;
         });
 
+        const safeFileName = currentFarmName.replace(/[^a-zA-Z0-9]/g, '_');
         const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `Laporan_AWW_Farm_${todayStr()}.csv`;
+        link.download = `Laporan_${safeFileName}_${todayStr()}.csv`;
         link.click();
     }
 
     function exportReportPDF() {
         window.print();
+    }
+
+    function saveFarmName(e) {
+        e.preventDefault();
+        if (currentUserRole !== "Super Owner") {
+            alert("Hanya Super Owner yang dapat mengubah nama farm.");
+            return;
+        }
+        const newName = document.getElementById('farmNameInput').value.trim();
+        if (!newName) return;
+
+        db.ref('settings/farmName').set(newName).then(() => {
+            applyFarmBranding(newName);
+            alert(`Nama farm berhasil diperbarui menjadi "${newName}"!`);
+        });
     }
 
     function saveUserRole(e) {
@@ -1864,8 +1924,13 @@
             return;
         }
         const email = document.getElementById('roleEmailInput').value.trim().toLowerCase();
+        if (email === PRIMARY_SUPER_OWNER) {
+            alert(`Akun ${PRIMARY_SUPER_OWNER} adalah Super Owner Utama dan tidak dapat diubah perannya.`);
+            return;
+        }
+
         const role = document.getElementById('roleSelectInput').value;
-        const existing = roles.find(r => (r.email || "").toLowerCase() === email);
+        const existing = roles.find(r => (r.email || "").trim().toLowerCase() === email);
 
         if (existing) {
             db.ref('roles/' + existing.id).update({ role: role });
@@ -1876,7 +1941,11 @@
         document.getElementById('roleEmailInput').value = '';
     }
 
-    function deleteUserRole(id) {
+    function deleteUserRole(id, email) {
+        if ((email || "").trim().toLowerCase() === PRIMARY_SUPER_OWNER) {
+            alert(`Akun ${PRIMARY_SUPER_OWNER} adalah Super Owner Utama dan tidak dapat dicabut aksesnya.`);
+            return;
+        }
         if (confirm('Cabut hak akses akun ini?')) {
             db.ref('roles/' + id).remove();
         }
@@ -1885,11 +1954,18 @@
     function renderRoles() {
         const tbody = document.getElementById('rolesTableBody');
         tbody.innerHTML = '';
-        if (!roles.length) {
-            tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#777;">Belum ada daftar hak akses tambahan.</td></tr>`;
-            return;
-        }
-        roles.forEach(r => {
+
+        const filteredRoles = roles.filter(r => (r.email || "").trim().toLowerCase() !== PRIMARY_SUPER_OWNER);
+
+        tbody.innerHTML += `
+            <tr style="background:#f8f4fc;">
+                <td><b>${PRIMARY_SUPER_OWNER}</b></td>
+                <td><span class="badge badge-owner">👑 Super Owner Utama</span></td>
+                <td><span style="font-size:0.82rem; color:#4a148c; font-weight:bold;">🔒 Akses Permanen</span></td>
+            </tr>
+        `;
+
+        filteredRoles.forEach(r => {
             let badgeCls = 'badge-warning';
             if (r.role === 'Super Owner') badgeCls = 'badge-owner';
             else if (r.role === 'Admin Farm') badgeCls = 'badge-primary';
@@ -1898,7 +1974,7 @@
                 <tr>
                     <td><b>${r.email}</b></td>
                     <td><span class="badge ${badgeCls}">${r.role}</span></td>
-                    <td><button class="btn-danger" onclick="deleteUserRole('${r.id}')">Cabut</button></td>
+                    <td><button class="btn-danger" onclick="deleteUserRole('${r.id}', '${r.email}')">Cabut</button></td>
                 </tr>
             `;
         });
